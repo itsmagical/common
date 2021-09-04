@@ -22,7 +22,7 @@ class SpUtil {
   /// 外部持久化数据使用
   SharedPreferences get prefs {
 
-    if (prefs == null) {
+    if (_prefs == null) {
       throw Exception('未初始化SharedPreferences...');
     }
 
