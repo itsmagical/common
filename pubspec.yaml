@@ -23,6 +23,8 @@ dependencies:
   shared_preferences: ^0.5.12+4
   # 动态权限
   permission_handler: 5.1.0+2
+  # RSA加密
+  encrypt: ^3.3.1
 
   # 选择图片
   image_picker: ^0.6.7+21
