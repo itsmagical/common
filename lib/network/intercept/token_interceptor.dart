@@ -1,31 +1,36 @@
 
 
 import 'package:common/network/model/authentication.dart';
+import 'package:common/network/model/response.dart';
 import 'package:common/network/model/token.dart';
+import 'package:common/network/network.dart';
 import 'package:common/util/user_util.dart';
 import 'package:common/util/util.dart';
 import 'package:dio/dio.dart';
 
-import '../network_component.dart';
 
 /// Token拦截器
 
 class TokenInterceptor extends Interceptor {
 
+  TokenInterceptor({this.network});
+
   Map<String, dynamic> _tokenParamMap = {};
+
+  Network network;
 
   @override
   Future onRequest(RequestOptions options) async {
 
     if (isTokenExpiredTime()) {
-      NetWorkComponent.instance.dio.interceptors.requestLock.lock();
+      network.dio.interceptors.requestLock.lock();
       /// 刷新token 不能携带已过期的token
       options.headers.remove('Authorization');
       await saveNewToken()
       .then((value) {
 
       });
-      NetWorkComponent.instance.dio.interceptors.requestLock.unlock();
+      network.dio.interceptors.requestLock.unlock();
     }
 
     options.headers.addAll(_tokenParamMap);
@@ -80,7 +85,8 @@ class TokenInterceptor extends Interceptor {
     params['grant_type'] = 'refresh_token';
     params['refresh_token'] = authentication.refresh_token.value;
 
-    return await NetWorkComponent.instance.post(path, headers: headers, params: params)
+    network.dio.options.headers = headers;
+    return await network.post(path, data: params)
     .then((response) {
       if (response.success) {
         var tokenMap = response.data;
@@ -103,7 +109,7 @@ class TokenInterceptor extends Interceptor {
   /// 清除token
   Future clearTokenHeaderParam() async {
     await UserUtil.instance.clearToken();
-    NetWorkComponent.instance.options.headers.remove('Authorization');
+    network.dio.options.headers.remove('Authorization');
     _tokenParamMap.clear();
   }
 

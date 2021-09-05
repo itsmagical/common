@@ -15,15 +15,17 @@ import 'network_error.dart';
 
 class NetWorkComponent extends BaseNetwork {
 
-  static final NetWorkComponent _instance = NetWorkComponent._construction();
+  NetWorkComponent(String baseUrl) : super(baseUrl);
 
-  static NetWorkComponent get instance {
-    return _instance;
-  }
-
-  NetWorkComponent._construction() {
-    _init();
-  }
+//  static final NetWorkComponent _instance = NetWorkComponent._construction();
+//
+//  static NetWorkComponent get instance {
+//    return _instance;
+//  }
+//
+//  NetWorkComponent._construction() {
+//    _init();
+//  }
 
   TokenInterceptor tokenInterceptor;
 

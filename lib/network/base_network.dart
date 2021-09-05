@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:common/network/dio_options.dart';
+import 'package:common/network/network_manager.dart';
 import 'package:common/util/log_util.dart';
 import 'package:dio/dio.dart';
 
@@ -13,7 +15,7 @@ import 'model/response.dart';
 
 abstract class BaseNetwork {
 
-  BaseNetwork() {
+  BaseNetwork(this.baseUrl) {
     _init();
   }
 
@@ -21,12 +23,18 @@ abstract class BaseNetwork {
 
   Dio dio;
 
+  String baseUrl;
+
   _init() {
+
+    DioOptions dioOptions = NetworkManager.instance.dioOptions ?? DioOptions();
+
     options = BaseOptions(
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
-      contentType: Headers.formUrlEncodedContentType,
-      responseType: ResponseType.plain,
+      baseUrl: baseUrl,
+      connectTimeout: dioOptions.connectTimeout,
+      receiveTimeout: dioOptions.receiveTimeout,
+      contentType: dio.options.contentType,
+      responseType: dio.options.responseType,
     );
 
     dio = new Dio(options);

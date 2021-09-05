@@ -4,9 +4,9 @@ import 'package:common/util/util.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/widgets.dart';
 
 import 'base_network.dart';
-import 'model/pagination.dart';
 import 'model/response.dart';
 import 'network_error.dart';
 import 'request_wrap.dart';
@@ -20,13 +20,9 @@ import 'request_wrap.dart';
 
 class Network extends BaseNetwork {
 
-  static final Network _instance = Network._constructor();
-
-  static Network get instance {
-    return _instance;
-  }
-
-  Network._constructor() {
+  Network({
+    @required String baseUrl
+  }) : super(baseUrl) {
     _init();
   }
 
@@ -53,14 +49,21 @@ class Network extends BaseNetwork {
   }
 
   /// get
-  Future<MResponse> get(String path, {Map<String, dynamic> params, Map<String, dynamic> headers}) async {
-
-    if (headers != null) {
-      options.headers.addAll(headers);
-    }
-
+  Future<MResponse<T>> get<T>(
+    String path, {
+      Map<String, dynamic> queryParameters,
+      Options options,
+      CancelToken cancelToken,
+      ProgressCallback onReceiveProgress,
+  }) async {
     try {
-      Response response = await dio.get(path, queryParameters: params);
+      Response response = await dio.get(
+          path,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress
+      );
       return getMResponse(response);
     } on DioError catch(error) {
       String errorDesc = NetWorError.getErrorDesc(error);
@@ -69,29 +72,38 @@ class Network extends BaseNetwork {
   }
 
   /// post
-  /// @params Map or dto
-  /// @pagination 分页
-  /// @headers 请求头
-  Future<MResponse> post(String path, {dynamic params, Pagination pagination, Map<String, dynamic> headers}) async {
-
-    if (headers != null) {
-      options.headers.addAll(headers);
-    }
-
-    // Request dto 序列化后的json字符串
-    String requestParams = requestWrap.getRequestJson(params, pagination: pagination);
-
-    Map<String, dynamic> queryMap = {};
-    queryMap['requestGson'] = requestParams;
-    FormData formData = FormData.fromMap(queryMap);
-
+  Future<MResponse<T>> post<T>(
+    String path, {
+      data,
+      Map<String, dynamic> queryParameters,
+      Options options,
+      CancelToken cancelToken,
+      ProgressCallback onSendProgress,
+      ProgressCallback onReceiveProgress,
+  }) async {
     try {
-      Response response = await dio.post(path, data: formData);
+      Response response = await dio.post(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress
+      );
       return getMResponse(response);
     } on DioError catch(error) {
-        String errorDesc = NetWorError.getErrorDesc(error);
-        return MResponse(data: null, success: false, message: errorDesc);
+      String errorDesc = NetWorError.getErrorDesc(error);
+      return MResponse(data: null, success: false, message: errorDesc);
     }
   }
+
+  /// 设置拦截器
+  Network setInterceptor(Interceptor interceptor) {
+    dio.interceptors.add(interceptor);
+    return this;
+  }
+
+
+
 
 }
