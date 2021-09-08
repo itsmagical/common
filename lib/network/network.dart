@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:common/network/dio_options.dart';
 import 'package:common/util/util.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -9,43 +10,26 @@ import 'package:flutter/widgets.dart';
 import 'base_network.dart';
 import 'model/response.dart';
 import 'network_error.dart';
-import 'request_wrap.dart';
 
 
 ///
 /// 网络请求
-/// Post field is requestGson
 /// @author LiuHe
 /// @created at 2020/12/16 ‏‎11:34
 
 class Network extends BaseNetwork {
 
   Network({
-    @required String baseUrl
-  }) : super(baseUrl) {
+    @required String baseUrl,
+    DioOptions dioOptions,
+  }) : super(baseUrl, dioOptions: dioOptions) {
     _init();
   }
-
-  RequestWrap requestWrap;
 
   DefaultCookieJar cookieJar;
 
   _init() {
-    requestWrap = RequestWrap();
 
-    cookieJar = CookieJar();
-    dio.interceptors.add(CookieManager(cookieJar));
-  }
-
-  /// 获取cookie
-  String get cookie {
-    List<Cookie> cookies = cookieJar.loadForRequest(Uri.parse(dio.options.baseUrl));
-    if (Util.isNotEmpty(cookies)) {
-      Cookie cookie = cookies[0];
-      String cookieJson = cookie.toString();
-      return cookieJson;
-    }
-    return null;
   }
 
   /// get
@@ -57,7 +41,7 @@ class Network extends BaseNetwork {
       ProgressCallback onReceiveProgress,
   }) async {
     try {
-      Response response = await dio.get(
+      Response<T> response = await dio.get<T>(
           path,
           queryParameters: queryParameters,
           options: options,
@@ -82,7 +66,7 @@ class Network extends BaseNetwork {
       ProgressCallback onReceiveProgress,
   }) async {
     try {
-      Response response = await dio.post(
+      Response<T> response = await dio.post<T>(
           path,
           data: data,
           queryParameters: queryParameters,
@@ -97,13 +81,32 @@ class Network extends BaseNetwork {
     }
   }
 
+  ///
+  Network setEnableCookie(bool enableCookie) {
+    if (enableCookie) {
+      cookieJar = CookieJar();
+      dio.interceptors.add(CookieManager(cookieJar));
+    }
+    return this;
+  }
+
+  /// 获取cookie
+  String get cookie {
+    if (cookieJar != null) {
+      List<Cookie> cookies = cookieJar.loadForRequest(Uri.parse(dio.options.baseUrl));
+      if (Util.isNotEmpty(cookies)) {
+        Cookie cookie = cookies[0];
+        String cookieJson = cookie.toString();
+        return cookieJson;
+      }
+    }
+    return null;
+  }
+
   /// 设置拦截器
   Network setInterceptor(Interceptor interceptor) {
     dio.interceptors.add(interceptor);
     return this;
   }
-
-
-
 
 }
