@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:common/network/dio_options.dart';
+import 'package:common/network/network_error.dart';
 import 'package:common/network/network_manager.dart';
 import 'package:common/util/log_util.dart';
 import 'package:common/util/util.dart';
@@ -27,15 +28,18 @@ abstract class BaseNetwork {
   String baseUrl;
   DioOptions _dioOptions;
 
+  /// 全局Options配置
   BaseOptions options;
 
+  /// http客户端对象
+  /// 现仅对get、post做响应处理
+  /// 其他请求方式请使用dio内置方法
   Dio dio;
 
   _init() {
 
     DioOptions dioOptions = _dioOptions ??
         NetworkManager.instance.dioOptions ?? DioOptions();
-
     options = BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: dioOptions.connectTimeout,
@@ -45,36 +49,75 @@ abstract class BaseNetwork {
     );
 
     dio = new Dio(options);
-
-    _setProxy();
   }
 
-  /// 设置代理
-  _setProxy() {
-    var proxy = NetworkManager.instance.proxy;
-    if (kDebugMode && Util.isNotEmptyText(proxy)) {
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (client) {
-        //这一段是解决安卓https抓包的问题
-        client.badCertificateCallback =
-            (X509Certificate cert, String host, int port) {
-          return Platform.isAndroid;
-        };
-        client.findProxy = (uri) {
-          return "PROXY $proxy";
-        };
-      };
+  /// get
+  Future<MResponse<T>> get<T>(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Options options,
+        CancelToken cancelToken,
+        ProgressCallback onReceiveProgress,
+  }) async {
+    try {
+      Response<T> response = await dio.get<T>(
+          path,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress
+      );
+      return getMResponse(response);
+    } on DioError catch(error) {
+      String errorDesc = NetWorError.getErrorDesc(error);
+      return MResponse(data: null, success: false, message: errorDesc);
     }
   }
 
+  /// post
+  Future<MResponse<T>> post<T>(
+      String path, {
+        data,
+        Map<String, dynamic> queryParameters,
+        Options options,
+        CancelToken cancelToken,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+  }) async {
+    try {
+      Response<T> response = await dio.post<T>(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress
+      );
+      return getMResponse(response);
+    } on DioError catch(error) {
+      String errorDesc = NetWorError.getErrorDesc(error);
+      return MResponse(data: null, success: false, message: errorDesc);
+    }
+  }
+
+  /// 原始响应对象转换为MResponse
   MResponse getMResponse(Response response) {
     if (response.statusCode == 200 || response.statusCode == 201) {
-      dynamic result = json.decode(response.data);
+      ResponseType responseType = response.request.responseType;
+
+      /// bytes: data type is List<int>
+      /// stream: data type is ResponseBody
+      if (responseType == ResponseType.bytes
+          || responseType == ResponseType.stream) {
+        return MResponse(data: response.data, success: true);
+      }
+
+      dynamic result = responseType == ResponseType.plain
+          ? json.decode(response.data) : response.data;
       bool success = result['success'];
       dynamic data = result['data'];
       String message = result['message'];
       int total = result['total'];
-      LogUtil.d(json.encode(data));
       return MResponse(data: data, success: success, message: message, total: total);
     } else {
       return MResponse(data: null, success: false, message: response.statusMessage);

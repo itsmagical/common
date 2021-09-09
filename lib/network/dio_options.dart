@@ -4,7 +4,7 @@ class DioOptions {
 
   DioOptions({
     this.connectTimeout = 10 * 1000,
-    this.receiveTimeout = 10 * 1000,
+    this.receiveTimeout = 20 * 1000,
     this.contentType = Headers.jsonContentType,
     this.responseType = ResponseType.json,
     extra,
