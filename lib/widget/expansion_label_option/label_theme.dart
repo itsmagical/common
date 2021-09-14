@@ -6,7 +6,7 @@ class LabelTheme {
     this.rowCount = 1,
     this.spacing = 10,
     this.visibleColumn = 2,
-    this.optionedIndex = 2,
+    this.optionedIndex = 0,
     this.labelHeight = 40,
     this.textColorBuilder,
     this.decorationBuilder,

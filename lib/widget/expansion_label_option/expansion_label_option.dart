@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'expansion_label_layout.dart';
 import 'item_label_helper.dart';
-import 'label_option_bean.dart';
+import 'item_entity.dart';
 import 'label_theme.dart';
 import 'dart:math' as math;
 
@@ -19,7 +19,7 @@ class ExpansionLabelOption extends StatefulWidget {
     this.width,
     this.theme,
     this.optionController,
-    @required this.optionBeans,
+    @required this.itemEntities,
     @required this.onOptionedCallback,
   });
 
@@ -31,10 +31,10 @@ class ExpansionLabelOption extends StatefulWidget {
   final OptionController optionController;
 
   /// 数据源
-  final List<LabelOptionBean> optionBeans;
+  final List<ItemEntity> itemEntities;
 
   /// 选中回调
-  final ValueChanged<LabelOptionBean> onOptionedCallback;
+  final ValueChanged<ItemEntity> onOptionedCallback;
 
   @override
   State<StatefulWidget> createState() {
@@ -62,8 +62,8 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
 
     labelHelper = ItemLabelHelper(onOptionedCallback: onOptionedCallback, theme: theme);
 
-    if (isNotEmpty(widget.optionBeans)) {
-      labelHelper.setOptionBeans(widget.optionBeans);
+    if (isNotEmpty(widget.itemEntities)) {
+      labelHelper.setOptionBeans(widget.itemEntities);
     }
 
     if (widget.optionController != null) {
@@ -77,8 +77,8 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
   @override
   void didUpdateWidget(ExpansionLabelOption oldWidget) {
     /// 为解决点击重复回调问题，暂时设置只能设置一次数据源，setState后数据不变
-    if (isNotEmpty(widget.optionBeans) && !isNotEmpty(labelHelper.getOptionBean())) {
-      labelHelper.setOptionBeans(widget.optionBeans);
+    if (isNotEmpty(widget.itemEntities) && !isNotEmpty(labelHelper.getOptionBean())) {
+      labelHelper.setOptionBeans(widget.itemEntities);
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -87,7 +87,7 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: isNotEmpty(widget.optionBeans) ? AnimatedBuilder(
+      child: isNotEmpty(widget.itemEntities) ? AnimatedBuilder(
           animation: animation,
           builder: buildExpansionLabelLayout
       ) : Container(),
@@ -144,7 +144,7 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
     );
   }
 
-  onOptionedCallback(LabelOptionBean bean, bool setState) {
+  onOptionedCallback(ItemEntity bean, bool setState) {
     widget.onOptionedCallback(bean);
     if (setState) {
       setStateCallback();

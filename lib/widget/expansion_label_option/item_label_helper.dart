@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'item_label.dart';
-import 'label_option_bean.dart';
+import 'item_entity.dart';
 import 'label_theme.dart';
 
 class ItemLabelHelper {
@@ -12,7 +12,7 @@ class ItemLabelHelper {
     resetOptionedIndex();
   }
 
-  List<LabelOptionBean> _optionBeans;
+  List<ItemEntity> _itemEntities;
 
   Function onOptionedCallback;
 
@@ -37,20 +37,20 @@ class ItemLabelHelper {
   }
 
   void _setOptioned() {
-    if (_optionBeans != null)
-    onOptionedCallback(_optionBeans[optionedIndex], false);
+    if (_itemEntities != null)
+    onOptionedCallback(_itemEntities[optionedIndex], false);
   }
 
-  void setOptionBeans(List<LabelOptionBean> beans) {
-    _optionBeans = beans;
+  void setOptionBeans(List<ItemEntity> entities) {
+    _itemEntities = entities;
     /// 设置的可见行数不能大于数据行数
     int columnCount = getColumnCount();
     if (theme.visibleColumn > columnCount) {
       theme.visibleColumn = columnCount;
     }
 
-    if (theme.optionedIndex >= _optionBeans.length) {
-      theme.optionedIndex = _optionBeans.length - 1;
+    if (theme.optionedIndex >= _itemEntities.length) {
+      theme.optionedIndex = _itemEntities.length - 1;
       if (theme.optionedIndex < 0) {
         theme.optionedIndex = null;
       }
@@ -62,18 +62,18 @@ class ItemLabelHelper {
     _setOptioned();
   }
 
-  List<LabelOptionBean> getOptionBean() {
-    return _optionBeans;
+  List<ItemEntity> getOptionBean() {
+    return _itemEntities;
   }
 
-  void createItemWidgets(List<LabelOptionBean> beans) {
+  void createItemWidgets(List<ItemEntity> beans) {
     itemWidgets = [];
     for (int i = 0; i < beans.length; i++) {
       itemWidgets.add(createItemWidget(i, beans[i]));
     }
   }
 
-  Widget createItemWidget(int id, LabelOptionBean bean) {
+  Widget createItemWidget(int id, ItemEntity entity) {
 
     bool isOptioned = optionedIndex == id;
 
@@ -82,7 +82,7 @@ class ItemLabelHelper {
       child: ItemLabel(
         index: id,
         isOptioned: isOptioned,
-        bean: bean,
+        entity: entity,
         theme: theme,
         optionedCallback: (bean, index) {
           optionedIndex = index;
@@ -100,7 +100,7 @@ class ItemLabelHelper {
   }
 
   List<Widget> getItemWidgets() {
-    createItemWidgets(_optionBeans);
+    createItemWidgets(_itemEntities);
     return itemWidgets;
   }
 
@@ -117,7 +117,7 @@ class ItemLabelHelper {
 
   /// 向上取整计算行数
   int getColumnCount() {
-    return (_optionBeans.length / theme.rowCount).ceil();
+    return (_itemEntities.length / theme.rowCount).ceil();
   }
 
 }

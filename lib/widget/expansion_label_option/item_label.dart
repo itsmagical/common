@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'label_option_bean.dart';
+import 'item_entity.dart';
 import 'label_theme.dart';
 
-typedef OptionedCallback = Function(LabelOptionBean bean, int index);
+typedef OptionedCallback = Function(ItemEntity entity, int index);
 
 class ItemLabel extends StatefulWidget {
 
@@ -10,14 +10,14 @@ class ItemLabel extends StatefulWidget {
     this.index,
     this.isOptioned,
     this.theme,
-    this.bean,
+    this.entity,
     this.optionedCallback
   });
 
   final int index;
   final bool isOptioned;
   final LabelTheme theme;
-  final LabelOptionBean bean;
+  final ItemEntity entity;
   final OptionedCallback optionedCallback;
 
   @override
@@ -39,7 +39,7 @@ class _ItemLabelState extends State<ItemLabel> {
     return GestureDetector(
       onTap: () {
         if (!widget.isOptioned) {
-          widget.optionedCallback(widget.bean, widget.index);
+          widget.optionedCallback(widget.entity, widget.index);
         }
       },
       child: Container(
@@ -50,7 +50,7 @@ class _ItemLabelState extends State<ItemLabel> {
         decoration: widget.theme.decorationBuilder(widget.isOptioned),
         alignment: Alignment.center,
         child: Text(
-          widget.bean.getName(),
+          widget.entity.name,
           style: TextStyle(
             color: widget.theme.textColorBuilder(widget.isOptioned),
           ),
