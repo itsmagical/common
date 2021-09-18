@@ -71,7 +71,7 @@ class NetworkManager {
       throw Exception('Network已创建，不能重复创建');
     }
 
-    network = Network(baseUrl: baseUrl);
+    network = Network(baseUrl: baseUrl, dioOptions: options);
     if (isMainNetwork) {
       if (_mainNetwork != null) {
         throw Exception('默认Network以创建，不能重复创建');
