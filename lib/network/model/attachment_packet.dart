@@ -19,7 +19,12 @@ class AttachmentPacket {
 
   AttachmentPacket.fromJson(Map<String, dynamic> json) {
     attachmentPacketId = json['attachmentPacketId'];
-    attachIds = json['attachIds'].cast<int>();
+    if (json['attachIds'] != null) {
+      attachIds = new List<int>();
+      json['attachIds'].forEach((v) {
+        attachIds.add(v);
+      });
+    }
     if (json['attachments'] != null) {
       attachments = new List<Attachment>();
       json['attachments'].forEach((v) {
@@ -32,6 +37,9 @@ class AttachmentPacket {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['attachmentPacketId'] = this.attachmentPacketId;
     data['attachIds'] = this.attachIds;
+    if (this.attachIds != null) {
+      data['attachIds'] = this.attachIds.map((e) => e.toString()).toList();
+    }
     if (this.attachments != null) {
       data['attachments'] = this.attachments.map((v) => v.toJson()).toList();
     }

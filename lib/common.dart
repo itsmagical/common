@@ -9,6 +9,7 @@ import 'package:common/widget/multiplestatus/status_widget_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
+export 'package:webview_flutter/webview_flutter.dart';
 export 'package:permission_handler/permission_handler.dart';
 
 /// 基本组件

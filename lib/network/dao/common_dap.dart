@@ -32,7 +32,7 @@ class CommonDao extends BaseDao {
   static CommonDao instance = CommonDao._();
 
   /// 查询字典值
-  Future<MResponse<List<Dictionary>>> queryDictionaries({
+  Future<MResponse> queryDictionaries({
     @required String tabName,
     @required String attribute,
     Network network,
@@ -61,7 +61,7 @@ class CommonDao extends BaseDao {
   }
 
   /// 查询附件
-  Future<MResponse<List<Attachment>>> queryAttachments({
+  Future<MResponse> queryAttachments({
     @required int attachmentPacketId,
     Network network,
     Options options
@@ -93,7 +93,7 @@ class CommonDao extends BaseDao {
   /// @param attachmentPacketId 附件包id，默认-1
   /// @param moduleType 文件所属功能模块类型
   /// @param network 执行本次上传的network，null则使用默认Network
-  Future<MResponse<AttachmentPacket>> uploadFiles({
+  Future<MResponse> uploadFiles({
     @required List<File> files,
     String attachmentPacketId = '-1',
     String moduleType,

@@ -112,8 +112,19 @@ abstract class BaseNetwork {
         return MResponse(data: response.data, success: true);
       }
 
-      dynamic result = responseType == ResponseType.plain
-          ? json.decode(response.data) : response.data;
+      /// 响应数据
+      dynamic result;
+      var responseData = response.data;
+
+      if (responseData.runtimeType == String) {
+        result = json.decode(responseData);
+      } else if (responseData is Map) {
+        result = responseData;
+      }
+      if (result == null) {
+        return MResponse(data: responseData, success: true);
+      }
+
       bool success = result['success'];
       dynamic data = result['data'];
       String message = result['message'];

@@ -65,7 +65,7 @@ class NetworkManager {
   /// 创建baseUrl对应的Network
   /// @param options 为Network单独设置Options,优先级大于默认Options
   /// @param isMainNetwork true: 默认Network
-  void createNetwork(String baseUrl, {DioOptions options, bool isMainNetwork}) {
+  void createNetwork(String baseUrl, {DioOptions options, bool isMainNetwork = false}) {
     Network network = _networkMap[baseUrl];
     if (network != null) {
       throw Exception('Network已创建，不能重复创建');

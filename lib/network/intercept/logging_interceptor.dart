@@ -28,15 +28,13 @@ class LoggingInterceptor extends Interceptor {
       LogUtil.d(
           '''
       -------------------headers----------------------------
-      Entity:
-        content-type: ${request.contentType}
       headers:
         $headers
       -------------------body----------------------------
       url:
         ${request.baseUrl + request.path}
       parameters:
-        ${jsonEncode(request.data)}
+        ${getRequestDataParams(request.data)}
       response:
         ${jsonEncode(response.data)}
       '''
@@ -48,16 +46,38 @@ class LoggingInterceptor extends Interceptor {
     return super.onResponse(response);
   }
 
+  /// 获取请求参数
+  /// @param requestData request.data
+  String getRequestDataParams(dynamic requestData) {
+    String requestParams = '';
+    if (requestData is FormData) {
+      List<dynamic> fields = requestData.fields;
+      if (fields != null && fields.length > 0) {
+        Map<String, dynamic> transferMap = {};
+        fields.forEach((field) {
+          if (field is MapEntry) {
+            transferMap[field.key] = field.value;
+          }
+        });
+        requestParams = jsonEncode(transferMap);
+      }
+    } else {
+      requestParams = jsonEncode(requestData);
+    }
+    return requestParams;
+  }
+
   @override
   Future onError(DioError err) {
     try {
       var request = err.request;
+
       LogUtil.d(
           '''
       url：
         ${request.baseUrl + request.path}
       parameters：
-        ${jsonEncode(request.data)}
+        ${getRequestDataParams(request.data)}
       errorMessage：
         ${err.message}
       

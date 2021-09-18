@@ -33,7 +33,7 @@ class NewCommonDao extends BaseDao {
 
   /// 查询字典值
   /// @param type
-  Future<MResponse<List<Dictionary>>> queryDictionaries({
+  Future<MResponse> queryDictionaries({
     @required String type,
     Network network,
     Options options,
@@ -61,7 +61,7 @@ class NewCommonDao extends BaseDao {
 
   /// 查询附件包内的附件
   /// @param attachmentPacketId
-  Future<MResponse<List<Attachment>>> queryAttachments({
+  Future<MResponse> queryAttachments({
     @required int attachmentPacketId,
     Network network,
   }) async {
@@ -93,7 +93,7 @@ class NewCommonDao extends BaseDao {
   /// @param attachmentPacketId 附件包id，默认-1
   /// @param moduleType 文件所属功能模块类型
   /// @param network 执行本次上传的network，null则使用默认Network
-  Future<MResponse<AttachmentPacket>> uploadFiles({
+  Future<MResponse> uploadFiles({
     @required List<File> files,
     String attachmentPacketId = '-1',
     String moduleType,
@@ -150,7 +150,7 @@ class NewCommonDao extends BaseDao {
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachment({
     @required int attachmentPacketId,
-    @required int dataIds,
+    @required String dataIds,
     Network network,
     Options options
   }) async {
