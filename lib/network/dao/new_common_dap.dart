@@ -95,7 +95,7 @@ class NewCommonDao extends BaseDao {
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> uploadFiles({
     @required List<File> files,
-    String attachmentPacketId = '-1',
+    int attachmentPacketId = -1,
     String moduleType,
     Network network,
   }) async {
