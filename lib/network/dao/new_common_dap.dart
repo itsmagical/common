@@ -40,9 +40,9 @@ class NewCommonDao extends BaseDao {
   }) async {
     network = network ?? this.network;
     String path = 'dictDataMgmt/listDictionarys.do';
-    Map<String, dynamic> params = getRequestJsonMap({
+    Map<String, dynamic> params = {
       'type': type,
-    });
+    };
     MResponse response = await network.post(path, data: params, options: options);
 
     if (response.success) {
@@ -67,9 +67,9 @@ class NewCommonDao extends BaseDao {
   }) async {
     network = network ?? this.network;
     String path = 'attachMgmt/listAttachments.do';
-    Map<String, dynamic> params = getRequestJsonMap({
+    Map<String, dynamic> params = {
       'attachmentPacketId': attachmentPacketId
-    });
+    };
 
     MResponse response = await network.post(path, data: params,
         options: Options(contentType: Headers.formUrlEncodedContentType));
@@ -118,7 +118,10 @@ class NewCommonDao extends BaseDao {
     if (response.success) {
       var data = response.data;
       if (data != null) {
-        response.data = AttachmentPacket.fromJson(data);
+        /// 多文件上传成功后，后台只返回一个附件的信息，而不是上传的附件集合
+        /// 无法转换为AttachmentPacket
+        response.data = Attachment.fromJson(data);
+//        response.data = AttachmentPacket.fromJson(data);
       }
     }
 
@@ -136,9 +139,9 @@ class NewCommonDao extends BaseDao {
     network = network ?? this.network;
 
     String path = 'attachMgmt/deleteAttachments.do';
-    Map<String, dynamic> params = getRequestJsonMap({
+    Map<String, dynamic> params = {
       'attachmentPacketId': attachmentPacketId
-    });
+    };
 
     MResponse response = await network.post(path, data: params, options: options);
     return response;
@@ -157,10 +160,10 @@ class NewCommonDao extends BaseDao {
     network = network ?? this.network;
 
     String path = 'attachMgmt/deleteOnlyAttach.do';
-    Map<String, dynamic> params = getRequestJsonMap({
+    Map<String, dynamic> params = {
       'attachmentPacketId': attachmentPacketId,
       'dataIds': dataIds
-    });
+    };
 
     MResponse response = await network.post(path, data: params, options: options);
     return response;
