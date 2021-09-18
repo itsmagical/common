@@ -1,3 +1,4 @@
+import 'package:common/widget/expansion_label_option/option_controller.dart';
 import 'package:flutter/material.dart';
 import 'item_label.dart';
 import 'item_entity.dart';
@@ -6,11 +7,14 @@ import 'label_theme.dart';
 class ItemLabelHelper {
 
   ItemLabelHelper({
+    this.optionController,
     this.onOptionedCallback,
     this.theme
   }) {
     resetOptionedIndex();
   }
+
+  OptionController optionController;
 
   List<ItemEntity> _itemEntities;
 
@@ -29,8 +33,8 @@ class ItemLabelHelper {
   int optionedColumn = 0;
 
   void resetOptionedIndex() {
-    if (theme.optionedIndex != optionedIndex) {
-      optionedIndex = theme.optionedIndex;
+    if (optionController.optionedIndex != optionedIndex) {
+      optionedIndex = optionController.optionedIndex;
       positionOptionedIndex = optionedIndex;
       _setOptioned();
     }
@@ -38,10 +42,10 @@ class ItemLabelHelper {
 
   void _setOptioned() {
     if (_itemEntities != null)
-    onOptionedCallback(_itemEntities[optionedIndex], false);
+    onOptionedCallback(_itemEntities[optionedIndex], optionedIndex, false);
   }
 
-  void setOptionBeans(List<ItemEntity> entities) {
+  void setOptionEntities(List<ItemEntity> entities) {
     _itemEntities = entities;
     /// 设置的可见行数不能大于数据行数
     int columnCount = getColumnCount();
@@ -49,13 +53,13 @@ class ItemLabelHelper {
       theme.visibleColumn = columnCount;
     }
 
-    if (theme.optionedIndex >= _itemEntities.length) {
-      theme.optionedIndex = _itemEntities.length - 1;
-      if (theme.optionedIndex < 0) {
-        theme.optionedIndex = null;
+    if (optionController.optionedIndex >= _itemEntities.length) {
+      optionController.optionedIndex = _itemEntities.length - 1;
+      if (optionController.optionedIndex < 0) {
+        optionController.optionedIndex = null;
       }
 
-      optionedIndex = theme.optionedIndex;
+      optionedIndex = optionController.optionedIndex;
       positionOptionedIndex = optionedIndex;
     }
 
@@ -87,7 +91,7 @@ class ItemLabelHelper {
         optionedCallback: (bean, index) {
           optionedIndex = index;
           // optionedColumn = calcOptionedColumn(index);
-          onOptionedCallback(bean, true);
+          onOptionedCallback(bean, index, true);
         },
       ),
     );

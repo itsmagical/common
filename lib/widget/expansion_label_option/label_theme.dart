@@ -6,7 +6,6 @@ class LabelTheme {
     this.rowCount = 1,
     this.spacing = 10,
     this.visibleColumn = 2,
-    this.optionedIndex = 0,
     this.labelHeight = 40,
     this.textColorBuilder,
     this.decorationBuilder,
@@ -30,9 +29,6 @@ class LabelTheme {
 
   /// 可见行数
   int visibleColumn;
-
-  /// 默认选中label位置
-  int optionedIndex;
 
   /// label 高度
   /// CustomMultiChildLayout 不能根据子项尺寸决定自身大小

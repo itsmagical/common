@@ -7,6 +7,8 @@ import 'dart:math' as math;
 
 import 'option_controller.dart';
 
+typedef OptionedCallback<T> = void Function(T entity, int index);
+
 /// 可折叠的标签选择器
 /// 支持自定义列数和默认显示行数
 /// 数据Model需实现 LabelOptionBean接口
@@ -34,7 +36,7 @@ class ExpansionLabelOption extends StatefulWidget {
   final List<ItemEntity> itemEntities;
 
   /// 选中回调
-  final ValueChanged<ItemEntity> onOptionedCallback;
+  final OptionedCallback<ItemEntity> onOptionedCallback;
 
   @override
   State<StatefulWidget> createState() {
@@ -60,10 +62,12 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
     controller = AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     animation = Tween(begin: 0.0, end: 1).animate(controller);
 
-    labelHelper = ItemLabelHelper(onOptionedCallback: onOptionedCallback, theme: theme);
+    OptionController optionController = widget.optionController ?? OptionController(initOptionedIndex: 0);
+
+    labelHelper = ItemLabelHelper(onOptionedCallback: onOptionedCallback, theme: theme, optionController: optionController);
 
     if (isNotEmpty(widget.itemEntities)) {
-      labelHelper.setOptionBeans(widget.itemEntities);
+      labelHelper.setOptionEntities(widget.itemEntities);
     }
 
     if (widget.optionController != null) {
@@ -78,7 +82,7 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
   void didUpdateWidget(ExpansionLabelOption oldWidget) {
     /// 为解决点击重复回调问题，暂时设置只能设置一次数据源，setState后数据不变
     if (isNotEmpty(widget.itemEntities) && !isNotEmpty(labelHelper.getOptionBean())) {
-      labelHelper.setOptionBeans(widget.itemEntities);
+      labelHelper.setOptionEntities(widget.itemEntities);
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -144,8 +148,8 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
     );
   }
 
-  onOptionedCallback(ItemEntity bean, bool setState) {
-    widget.onOptionedCallback(bean);
+  onOptionedCallback(ItemEntity entity, int index, bool setState) {
+    widget.onOptionedCallback(entity, index);
     if (setState) {
       setStateCallback();
     }
