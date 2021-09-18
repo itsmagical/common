@@ -3,13 +3,26 @@ import 'package:flutter/material.dart';
 /// 加载中Widget
 class LoadingStatusWidget extends StatefulWidget {
 
+  LoadingStatusWidget({
+    this.context
+  });
+
+  final BuildContext context;
+
   @override
   State<StatefulWidget> createState() {
-    return _LoadingStatusWidgetState();
+    return _LoadingStatusWidgetState(statusContext: context);
   }
 }
 
 class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
+
+  _LoadingStatusWidgetState({
+    this.statusContext
+  });
+
+  BuildContext statusContext;
+
   @override
   Widget build(BuildContext context) {
     return Container();
@@ -20,24 +33,26 @@ class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
     Future.delayed(
       Duration.zero,
       () {
-        showLoadingDialog(context);
+        showLoadingDialog(statusContext);
       }
     );
+
     super.initState();
   }
 
   @override
   void dispose() {
-    /// 状态改变时dismiss
-    Navigator.pop(context, true);
+    if(Navigator.canPop(statusContext)) {
+      Navigator.pop(statusContext, true);
+    }
     super.dispose();
   }
 
   void showLoadingDialog(BuildContext context) async {
     await showDialog(
         context: context,
-      barrierDismissible: true,
-      builder: (context) {
+        barrierDismissible: false,
+        builder: (context) {
         return Container(
           alignment: Alignment.center,
           child: Container(
@@ -55,7 +70,10 @@ class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
       /// dispose true状态改变时dismiss，
       /// null 手动dismiss 退出页面
       if (dispose == null) {
-        Navigator.pop(context);
+//        Navigator.pop(context);
+        if(Navigator.canPop(context)) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
       }
 
     });

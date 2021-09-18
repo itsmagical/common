@@ -1,8 +1,8 @@
 
-import 'package:common/widget/multiplestatus/status_widget/status_images.dart';
 import 'package:flutter/material.dart';
 
 import '../status_handler.dart';
+import 'status_images.dart';
 
 /// 错误Widget
 class ErrorStatusWidget extends StatefulWidget {

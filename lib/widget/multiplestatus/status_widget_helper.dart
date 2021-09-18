@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
 
+import 'multiple_status_config.dart';
 import 'status.dart';
 import 'status_handler.dart';
-import 'multiple_status_config.dart';
+import 'status_widget/empty_status_widget.dart';
+import 'status_widget/error_status_widget.dart';
+import 'status_widget/loading_status_widget.dart';
 import 'status_widget_provider.dart';
 
 
@@ -14,21 +17,37 @@ import 'status_widget_provider.dart';
 class StatusWidgetHelper {
 
   StatusWidgetHelper({
+    this.context,
     this.retryingCallback,
     this.widgetProvider,
   }) {
 
     handler = StatusHandler(this);
 
-    if (widgetProvider == null) {
-      widgetProvider = MultipleStatusConfig.instance.getWidgetProvider();
-    }
-
-    if (widgetProvider == null) {
-      return;
-    }
-
     MultipleStatusConfig config = MultipleStatusConfig.instance;
+
+    /// 配置默认状态布局
+    if (config.getWidgetProvider() == null) {
+      config.setStatusWidgetProvider(
+          StatusWidgetProvider(
+              getLoadingWidget: (handler) {
+                return LoadingStatusWidget(context: context);
+              },
+              getErrorWidget: (handler) {
+                return ErrorStatusWidget(handler);
+              },
+              getEmptyWidget: (handler) {
+                return EmptyStatusWidget();
+              }
+          )
+      );
+    }
+
+    /// 未设置局部Widget则使用全局配置Widget
+    if (widgetProvider == null) {
+      widgetProvider = config.getWidgetProvider();
+    }
+
 
     if (widgetProvider.getLoadingWidget != null) {
       /// 局部配置Widget
@@ -50,6 +69,8 @@ class StatusWidgetHelper {
       errorWidget = config.getWidgetProvider().getErrorWidget(handler);
     }
   }
+
+  BuildContext context;
 
   /// 重试回调
   final VoidCallback retryingCallback;

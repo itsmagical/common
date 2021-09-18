@@ -5,9 +5,14 @@ import 'status_controller.dart';
 import 'status_widget_helper.dart';
 import 'status_widget_provider.dart';
 
+
+///
 /// 多状态加载布局
 /// 可全局或局部配置状态布局
 /// 局部优先级大于全局
+/// @author LiuHe
+/// @created at 2021/1/25 10:30
+
 class MultipleStatusWidget extends StatefulWidget {
 
   MultipleStatusWidget({
@@ -39,22 +44,38 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
   _MultipleStatusWidgetState(
       this.child,
       controller,
-      retryingCallback,
-      widgetProvider
+      this.retryingCallback,
+      this.widgetProvider
   ) {
     if (controller != null) {
       status = controller.getStatus();
       controller.setStatusChangedCallback(statusChanged);
     }
-    statusWidgetHelper = StatusWidgetHelper(
-      retryingCallback: retryingCallback,
-      widgetProvider: widgetProvider,
-    );
+//    statusWidgetHelper = StatusWidgetHelper(
+//      context: context,
+//      retryingCallback: retryingCallback,
+//      widgetProvider: widgetProvider,
+//    );
   }
 
   final Widget child;
   Status status;
   StatusWidgetHelper statusWidgetHelper;
+
+  /// 重试回调
+  final VoidCallback retryingCallback;
+
+  StatusWidgetProvider widgetProvider;
+
+  @override
+  void initState() {
+    statusWidgetHelper = StatusWidgetHelper(
+      context: context,
+      retryingCallback: retryingCallback,
+      widgetProvider: widgetProvider,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +84,11 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
 //    );
 
     return Stack(
+      fit: StackFit.expand,
       children: <Widget>[
         child,
         if (status != null && status != Status.FINISH)
           Positioned(
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
             child: statusWidgetHelper.render(status),
           )
       ],
