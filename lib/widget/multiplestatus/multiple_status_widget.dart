@@ -31,7 +31,6 @@ class MultipleStatusWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _MultipleStatusWidgetState(
-        child,
         controller,
         retryingCallback,
         widgetProvider
@@ -42,7 +41,6 @@ class MultipleStatusWidget extends StatefulWidget {
 class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
 
   _MultipleStatusWidgetState(
-      this.child,
       controller,
       this.retryingCallback,
       this.widgetProvider
@@ -51,14 +49,8 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
       status = controller.getStatus();
       controller.setStatusChangedCallback(statusChanged);
     }
-//    statusWidgetHelper = StatusWidgetHelper(
-//      context: context,
-//      retryingCallback: retryingCallback,
-//      widgetProvider: widgetProvider,
-//    );
   }
 
-  final Widget child;
   Status status;
   StatusWidgetHelper statusWidgetHelper;
 
@@ -69,14 +61,11 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      statusWidgetHelper = StatusWidgetHelper(
-        context: context,
-        retryingCallback: retryingCallback,
-        widgetProvider: widgetProvider,
-      );
-    });
-
+    statusWidgetHelper = StatusWidgetHelper(
+      context: context,
+      retryingCallback: retryingCallback,
+      widgetProvider: widgetProvider,
+    );
     super.initState();
   }
 
@@ -89,11 +78,9 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        child,
+        widget.child,
         if (status != null && status != Status.FINISH)
-          Positioned(
-            child: statusWidgetHelper.render(status),
-          )
+          statusWidgetHelper.render(status)
       ],
     );
 

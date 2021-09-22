@@ -1,11 +1,6 @@
 library common;
 
 import 'package:common/util/sp_util.dart';
-import 'package:common/widget/multiplestatus/multiple_status_config.dart';
-import 'package:common/widget/multiplestatus/status_widget/empty_status_widget.dart';
-import 'package:common/widget/multiplestatus/status_widget/error_status_widget.dart';
-import 'package:common/widget/multiplestatus/status_widget/loading_status_widget.dart';
-import 'package:common/widget/multiplestatus/status_widget_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 

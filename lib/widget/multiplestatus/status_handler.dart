@@ -9,7 +9,9 @@ class StatusHandler {
 
   /// 重试
   onRetryingCommand() {
-    helper.retryingCallback();
+    if (helper.retryingCallback != null) {
+      helper.retryingCallback();
+    }
   }
 
 }

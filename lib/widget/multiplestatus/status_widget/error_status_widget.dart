@@ -32,7 +32,7 @@ class _ErrorStatusWidgetState extends State<ErrorStatusWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Image.asset(StatusImages.status_error),
+            Image.asset(StatusImages.status_error, width: 150, height: 118,),
             Container(
                 margin: EdgeInsets.only(top: 10),
                 child: Text(
