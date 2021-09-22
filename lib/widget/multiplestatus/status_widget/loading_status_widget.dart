@@ -13,6 +13,7 @@ class LoadingStatusWidget extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _LoadingStatusWidgetState(statusContext: context);
   }
+
 }
 
 class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
@@ -30,25 +31,26 @@ class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
 
   @override
   void initState() {
-    Future.delayed(
-      Duration.zero,
-      () {
-        showLoadingDialog(statusContext);
-      }
-    );
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      showLoadingDialog(statusContext);
+    });
 
     super.initState();
   }
 
   @override
   void dispose() {
-    if(Navigator.canPop(statusContext)) {
-      Navigator.pop(statusContext, true);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if(Navigator.canPop(statusContext)) {
+        Navigator.pop(statusContext, true);
+      }
+    });
+
     super.dispose();
   }
 
-  void showLoadingDialog(BuildContext context) async {
+  showLoadingDialog(BuildContext context) async {
     await showDialog(
         context: context,
         barrierDismissible: false,

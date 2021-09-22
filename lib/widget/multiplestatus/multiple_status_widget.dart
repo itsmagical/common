@@ -69,11 +69,14 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
 
   @override
   void initState() {
-    statusWidgetHelper = StatusWidgetHelper(
-      context: context,
-      retryingCallback: retryingCallback,
-      widgetProvider: widgetProvider,
-    );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      statusWidgetHelper = StatusWidgetHelper(
+        context: context,
+        retryingCallback: retryingCallback,
+        widgetProvider: widgetProvider,
+      );
+    });
+
     super.initState();
   }
 

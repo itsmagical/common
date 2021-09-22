@@ -52,7 +52,8 @@ dev_dependencies:
 flutter:
 
   assets:
-    - packages/common/widget/multiplestatus/status_widget/images/
+    - packages/common/widget/multiplestatus/status_widget/images/status_error.png
+    - packages/common/widget/multiplestatus/status_widget/images/status_no_data.png
   # To add assets to your package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

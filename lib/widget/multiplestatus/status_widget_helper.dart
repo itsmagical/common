@@ -30,13 +30,13 @@ class StatusWidgetHelper {
     if (config.getWidgetProvider() == null) {
       config.setStatusWidgetProvider(
           StatusWidgetProvider(
-              getLoadingWidget: (handler) {
+              getLoadingWidget: (handler, context) {
                 return LoadingStatusWidget(context: context);
               },
-              getErrorWidget: (handler) {
+              getErrorWidget: (handler, context) {
                 return ErrorStatusWidget(handler);
               },
-              getEmptyWidget: (handler) {
+              getEmptyWidget: (handler, context) {
                 return EmptyStatusWidget();
               }
           )
@@ -51,22 +51,22 @@ class StatusWidgetHelper {
 
     if (widgetProvider.getLoadingWidget != null) {
       /// 局部配置Widget
-      loadingWidget = widgetProvider.getLoadingWidget(handler);
+      loadingWidget = widgetProvider.getLoadingWidget(handler, context);
     } else {
       /// 全局配置Widget
-      loadingWidget = config.getWidgetProvider().getLoadingWidget(handler);
+      loadingWidget = config.getWidgetProvider().getLoadingWidget(handler, context);
     }
 
     if (widgetProvider.getEmptyWidget != null) {
-      emptyWidget = widgetProvider.getEmptyWidget(handler);
+      emptyWidget = widgetProvider.getEmptyWidget(handler, context);
     } else {
-      emptyWidget = config.getWidgetProvider().getEmptyWidget(handler);
+      emptyWidget = config.getWidgetProvider().getEmptyWidget(handler, context);
     }
 
     if (widgetProvider.getErrorWidget != null) {
-      errorWidget = widgetProvider.getErrorWidget(handler);
+      errorWidget = widgetProvider.getErrorWidget(handler, context);
     } else {
-      errorWidget = config.getWidgetProvider().getErrorWidget(handler);
+      errorWidget = config.getWidgetProvider().getErrorWidget(handler, context);
     }
   }
 
@@ -80,6 +80,8 @@ class StatusWidgetHelper {
   Widget loadingWidget, emptyWidget, errorWidget;
 
   StatusHandler handler;
+
+  dynamic focusStatusView;
 
   Widget render(Status status) {
     return getStatusWidget(status);

@@ -23,20 +23,8 @@ class Common {
 
   /// 初始化
   static Future init() async {
-    initMultipleStatusWidget();
     initEasyRefresh();
     await SpUtil.instance.init();
-  }
-
-  /// 初始化多状态加载布局
-  static void initMultipleStatusWidget() {
-    MultipleStatusConfig.instance.setStatusWidgetProvider(
-      StatusWidgetProvider(
-        getLoadingWidget: (handler) => LoadingStatusWidget(),
-        getEmptyWidget: (handler) => EmptyStatusWidget(),
-        getErrorWidget: (handler)=> ErrorStatusWidget(handler),
-      )
-    );
   }
 
   /// 初始化EasyRefresh样式
