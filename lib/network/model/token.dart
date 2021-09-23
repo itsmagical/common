@@ -10,7 +10,7 @@ class Token {
   String access_token;
 
   /// 类型
-  bool token_type;
+  String token_type;
 
   /// 刷新token参数
   String refresh_token;
