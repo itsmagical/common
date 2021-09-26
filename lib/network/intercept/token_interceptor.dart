@@ -113,22 +113,34 @@ class TokenInterceptor extends Interceptor {
     params['refresh_token'] = authentication.refresh_token.value;
 
     _dio.options.headers = headers;
-    Response response =  await _dio.post(path, data: params, options: Options(contentType: Headers.formUrlEncodedContentType));
+    try {
+      Response response = await _dio.post(path, data: params, options: Options(contentType: Headers.formUrlEncodedContentType));
 
-    if (response.statusCode == 200) {
-      var tokenMap = response.data;
-      print('token刷新成功：${tokenMap.toString()}');
-      Token token = Token.fromJson(tokenMap);
-      authentication.access_token = token.access_token;
-      authentication.expiredTime = token.expiredTime;
-      authentication.refresh_token.value = token.refresh_token;
-      UserUtil.instance.saveToken(authentication);
-      addTokenHeaderParam(token.access_token);
-    } else {
-      print('刷新token错误');
+      if (response.statusCode == 200) {
+        var tokenMap = response.data;
+        print('token刷新成功：${tokenMap.toString()}');
+        Token token = Token.fromJson(tokenMap);
+        authentication.access_token = token.access_token;
+        authentication.expiredTime = token.expiredTime;
+        authentication.refresh_token.value = token.refresh_token;
+        UserUtil.instance.saveToken(authentication);
+        addTokenHeaderParam(token.access_token);
+      } else {
+        print('刷新token错误');
+        if (reLoginCallback != null) {
+          reLoginCallback();
+        }
+      }
+
+      return response;
+
+    } catch(error) {
+      if (reLoginCallback != null) {
+        reLoginCallback();
+      }
     }
 
-    return response;
+    return null;
   }
 
   /// 添加token
