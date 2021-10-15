@@ -8,6 +8,8 @@ export 'package:dio/dio.dart';
 export 'package:webview_flutter/webview_flutter.dart';
 export 'package:permission_handler/permission_handler.dart';
 export 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+export 'package:shared_preferences/shared_preferences.dart';
+export 'package:flutter_echarts/flutter_echarts.dart';
 
 /// 基本组件
 /// 基本业务组件或业务组件都需要依赖此组件
