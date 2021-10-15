@@ -25,8 +25,12 @@ class OptionController {
 
   /// 重置
   void _reset() {
-    _resetOptionedIndexCallback();
-    _setStateCallback();
+    if (_resetOptionedIndexCallback != null) {
+      _resetOptionedIndexCallback();
+    }
+    if (_setStateCallback != null) {
+      _setStateCallback();
+    }
   }
 
   /// 内部调用
