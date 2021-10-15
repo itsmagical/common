@@ -21,6 +21,12 @@ class TokenInterceptor extends Interceptor {
     _dio.options.baseUrl = baseUrl;
   }
 
+  /// 请求头参数包含有该名称的key，则跳过token拦截
+  static final ignoreTokenInterceptor = 'ignore_token_interceptor';
+
+  /// 请求头参数包含有该名称的key，则不执行登录回调
+  static final disableReLoginCallback = 'disable_relogin_callback';
+
   Map<String, dynamic> _tokenParamMap = {};
 
   /// 请求token的地址
@@ -31,16 +37,27 @@ class TokenInterceptor extends Interceptor {
 
   Dio _dio;
 
+  var _headers;
+
   @override
   Future onRequest(RequestOptions options) async {
+    var headers = options.headers;
+    _headers = headers;
+
+    if (headers != null) {
+      if (headers.containsKey(ignoreTokenInterceptor)) {
+        headers.remove(ignoreTokenInterceptor);
+        return options;
+      }
+    }
 
     if (isTokenExpiredTime()) {
       /// 刷新token 不能携带已过期的token
-      options.headers.remove('Authorization');
+      headers.remove('Authorization');
       await saveNewToken();
     }
 
-    options.headers.addAll(_tokenParamMap);
+    headers.addAll(_tokenParamMap);
 
     return options;
 
@@ -59,9 +76,7 @@ class TokenInterceptor extends Interceptor {
 
       /// 刷新token为null
       if (!Util.isNotNull(refreshToken) || !Util.isNotEmptyText(refreshToken.value)) {
-        if (reLoginCallback != null) {
-          reLoginCallback();
-        }
+        reLogin();
         return false;
       }
 
@@ -73,9 +88,7 @@ class TokenInterceptor extends Interceptor {
         bool isExpired = expiredTime.isBefore(DateTime.now());
         /// 刷新过期，重新登录
         if (isExpired) {
-          if (reLoginCallback != null) {
-            reLoginCallback();
-          }
+          reLogin();
           return false;
         }
       }
@@ -127,17 +140,13 @@ class TokenInterceptor extends Interceptor {
         addTokenHeaderParam(token.access_token);
       } else {
         print('刷新token错误');
-        if (reLoginCallback != null) {
-          reLoginCallback();
-        }
+        reLogin();
       }
 
       return response;
 
     } catch(error) {
-      if (reLoginCallback != null) {
-        reLoginCallback();
-      }
+      reLogin();
     }
 
     return null;
@@ -153,6 +162,19 @@ class TokenInterceptor extends Interceptor {
   Future clearTokenHeaderParam() async {
     await UserUtil.instance.clearToken();
     _tokenParamMap.clear();
+  }
+
+  /// 登录回调
+  reLogin() {
+    if (reLoginCallback != null) {
+      /// 移除该次请求不执行回调的标记参数
+      if (_headers != null && _headers.containsKey(disableReLoginCallback)) {
+        _headers.remove(disableReLoginCallback);
+        return;
+      }
+
+      reLoginCallback();
+    }
   }
 
 }
