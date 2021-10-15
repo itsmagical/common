@@ -14,13 +14,28 @@ class Dictionary {
   /// 字典值描述
   String description;
 
-  Dictionary({this.tableName, this.attribute, this.value, this.description});
+  ///--------接版本接口字典值------------///
+  /// 字典名称
+  String dictLabel;
+  /// 字典纸
+  int dictValue;
+
+  Dictionary({
+    this.tableName,
+    this.attribute,
+    this.value,
+    this.description,
+    this.dictLabel,
+    this.dictValue
+  });
 
   Dictionary.fromJson(Map<String, dynamic> json) {
     tableName = json['tableName'];
     attribute = json['attribute'];
     value = json['value'];
     description = json['description'];
+    dictLabel = json['dictLabel'];
+    dictValue = json['dictValue'];
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +44,8 @@ class Dictionary {
     data['attribute'] = this.attribute;
     data['value'] = this.value;
     data['description'] = this.description;
+    data['dictLabel'] = this.dictLabel;
+    data['dictValue'] = this.dictValue;
     return data;
   }
 }
