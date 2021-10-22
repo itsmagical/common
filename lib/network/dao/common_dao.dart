@@ -6,7 +6,6 @@ import 'package:common/network/model/attachment_packet.dart';
 import 'package:common/network/model/dictionary.dart';
 import 'package:common/network/model/response.dart';
 import 'package:common/network/network.dart';
-import 'package:common/network/network_manager.dart';
 import 'package:common/util/util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +21,7 @@ import 'package:flutter/material.dart';
 
 class CommonDao extends BaseDao {
 
-  Network network;
-
-  CommonDao._() {
-    network = NetworkManager.instance.getNetwork();
-  }
+  CommonDao._();
 
   static CommonDao instance = CommonDao._();
 
@@ -34,10 +29,9 @@ class CommonDao extends BaseDao {
   Future<MResponse> queryDictionaries({
     @required String tabName,
     @required String attribute,
-    Network network,
+    @required Network network,
     Options options
   }) async {
-    network = network ?? this.network;
     String path = 'mobileAppBasicMgmt/deleteAttachment.do';
     Map<String, dynamic> params = getRequestJsonMap({
       'tableName': tabName,
@@ -62,10 +56,9 @@ class CommonDao extends BaseDao {
   /// 查询附件
   Future<MResponse> queryAttachments({
     @required int attachmentPacketId,
-    Network network,
+    @required Network network,
     Options options
   }) async {
-    network = network ?? this.network;
     String path = 'mobileAppBasicMgmt/listAttachments.do';
     Map<String, dynamic> params = getRequestJsonMap({
       'attachmentPacketId': attachmentPacketId
@@ -96,9 +89,8 @@ class CommonDao extends BaseDao {
     @required List<File> files,
     String attachmentPacketId = '-1',
     String moduleType,
-    Network network,
+    @required Network network,
   }) async {
-    network = network ?? this.network;
     String path = 'mobileAppBasicMgmt/uploadAttachments.do';
     var formData = FormData();
     for (int i = 0; i < files.length; i++) {
@@ -129,11 +121,9 @@ class CommonDao extends BaseDao {
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachment({
     @required int attachmentId,
-    Network network,
+    @required Network network,
     Options options
   }) async {
-    network = network ?? this.network;
-
     String path = 'mobileAppBasicMgmt/deleteAttachment.do';
     Map<String, dynamic> params = getRequestJsonMap({
       'attachmentId': attachmentId

@@ -6,7 +6,6 @@ import 'package:common/network/model/attachment.dart';
 import 'package:common/network/model/dictionary.dart';
 import 'package:common/network/model/response.dart';
 import 'package:common/network/network.dart';
-import 'package:common/network/network_manager.dart';
 import 'package:common/util/util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +21,7 @@ import 'package:flutter/material.dart';
 
 class NewCommonDao extends BaseDao {
 
-  Network network;
-
-  NewCommonDao._() {
-    network = NetworkManager.instance.getNetwork();
-  }
+  NewCommonDao._();
 
   static NewCommonDao instance = NewCommonDao._();
 
@@ -34,10 +29,9 @@ class NewCommonDao extends BaseDao {
   /// @param type
   Future<MResponse> queryDictionaries({
     @required String type,
-    Network network,
+    @required Network network,
     Options options,
   }) async {
-    network = network ?? this.network;
     String path = 'dictDataMgmt/listDictionarys.do';
     Map<String, dynamic> params = {
       'type': type,
@@ -62,9 +56,8 @@ class NewCommonDao extends BaseDao {
   /// @param attachmentPacketId
   Future<MResponse> queryAttachments({
     @required int attachmentPacketId,
-    Network network,
+    @required Network network,
   }) async {
-    network = network ?? this.network;
     String path = 'attachMgmt/listAttachments.do';
     Map<String, dynamic> params = {
       'attachmentPacketId': attachmentPacketId
@@ -96,9 +89,8 @@ class NewCommonDao extends BaseDao {
     @required List<File> files,
     int attachmentPacketId = -1,
     String moduleType,
-    Network network,
+    @required Network network,
   }) async {
-    network = network ?? this.network;
     String path = 'attachMgmt/multipleFileUpload.do';
     var formData = FormData();
     for (int i = 0; i < files.length; i++) {
@@ -132,11 +124,9 @@ class NewCommonDao extends BaseDao {
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachments({
     @required int attachmentPacketId,
-    Network network,
+    @required Network network,
     Options options
   }) async {
-    network = network ?? this.network;
-
     String path = 'attachMgmt/deleteAttachments.do';
     Map<String, dynamic> params = {
       'attachmentPacketId': attachmentPacketId
@@ -151,11 +141,9 @@ class NewCommonDao extends BaseDao {
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachment({
     @required String dataIds,
-    Network network,
+    @required Network network,
     Options options
   }) async {
-    network = network ?? this.network;
-
     String path = 'attachMgmt/deleteOnlyAttach.do';
     Map<String, dynamic> params = {
       'dataIds': dataIds
