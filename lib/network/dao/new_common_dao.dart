@@ -153,4 +153,19 @@ class NewCommonDao extends BaseDao {
     return response;
   }
 
+  /// 拷贝附件
+  Future<MResponse> copyAttachment({
+    @required String packetIdStr,
+    @required Network network,
+    Options options
+  }) async {
+    String path = 'attachMgmt/copyAttach.do';
+    Map<String, dynamic> params = {
+      'packetIdStr': packetIdStr
+    };
+
+    MResponse response = await network.post(path, data: params, options: options);
+    return response;
+  }
+
 }
