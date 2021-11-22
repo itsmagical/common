@@ -37,24 +37,29 @@ class TokenInterceptor extends Interceptor {
 
   Dio _dio;
 
-  var _headers;
-
   @override
   Future onRequest(RequestOptions options) async {
     var headers = options.headers;
-    _headers = headers;
+
+    bool reloginEnable = true;
 
     if (headers != null) {
       if (headers.containsKey(ignoreTokenInterceptor)) {
         headers.remove(ignoreTokenInterceptor);
         return options;
       }
+
+      if (headers.containsKey(disableReLoginCallback)) {
+        headers.remove(disableReLoginCallback);
+        reloginEnable = false;
+      }
+
     }
 
-    if (isTokenExpiredTime()) {
+    if (isTokenExpiredTime(reloginEnable)) {
       /// 刷新token 不能携带已过期的token
       headers.remove('Authorization');
-      await saveNewToken();
+      await saveNewToken(reloginEnable);
     }
 
     headers.addAll(_tokenParamMap);
@@ -66,7 +71,7 @@ class TokenInterceptor extends Interceptor {
 
 
   /// @return true token is expired
-  bool isTokenExpiredTime() {
+  bool isTokenExpiredTime(bool reloginEnable) {
 
     Authentication token = UserUtil.instance.getToken();
 
@@ -76,7 +81,7 @@ class TokenInterceptor extends Interceptor {
 
       /// 刷新token为null
       if (!Util.isNotNull(refreshToken) || !Util.isNotEmptyText(refreshToken.value)) {
-        reLogin();
+        reLogin(reloginEnable);
         return false;
       }
 
@@ -88,7 +93,7 @@ class TokenInterceptor extends Interceptor {
         bool isExpired = expiredTime.isBefore(DateTime.now());
         /// 刷新过期，重新登录
         if (isExpired) {
-          reLogin();
+          reLogin(reloginEnable);
           return false;
         }
       }
@@ -113,7 +118,7 @@ class TokenInterceptor extends Interceptor {
   }
 
   /// token过期 根据refreshToken 刷新token
-  Future saveNewToken() async {
+  Future saveNewToken(bool reloginEnable) async {
     String path = 'oauth/token';
 
     Map<String, String> headers = {};
@@ -140,13 +145,13 @@ class TokenInterceptor extends Interceptor {
         addTokenHeaderParam(token.access_token);
       } else {
         print('刷新token错误');
-        reLogin();
+        reLogin(reloginEnable);
       }
 
       return response;
 
     } catch(error) {
-      reLogin();
+      reLogin(reloginEnable);
     }
 
     return null;
@@ -165,15 +170,11 @@ class TokenInterceptor extends Interceptor {
   }
 
   /// 登录回调
-  reLogin() {
+  reLogin(bool reloginEnable) {
     if (reLoginCallback != null) {
-      /// 移除该次请求不执行回调的标记参数
-      if (_headers != null && _headers.containsKey(disableReLoginCallback)) {
-        _headers.remove(disableReLoginCallback);
-        return;
+      if (reloginEnable) {
+        reLoginCallback();
       }
-
-      reLoginCallback();
     }
   }
 
