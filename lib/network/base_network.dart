@@ -125,11 +125,18 @@ abstract class BaseNetwork {
         return MResponse(data: responseData, success: true);
       }
 
-      bool success = result['success'];
       dynamic data = result['data'];
-      String message = result['message'];
-      int total = result['total'];
-      return MResponse(data: data, success: success, message: message, total: total);
+
+      if (data != null) {
+        bool success = result['success'];
+        String message = result['message'];
+        int total = result['total'];
+        return MResponse(data: data, success: success, message: message, total: total);
+
+      } else {
+        return MResponse(data: result, success: true);
+      }
+
     } else {
       return MResponse(data: null, success: false, message: response.statusMessage);
     }
