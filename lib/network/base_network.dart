@@ -58,7 +58,7 @@ abstract class BaseNetwork {
         Options options,
         CancelToken cancelToken,
         ProgressCallback onReceiveProgress,
-  }) async {
+      }) async {
     try {
       Response<T> response = await dio.get<T>(
           path,
@@ -83,7 +83,7 @@ abstract class BaseNetwork {
         CancelToken cancelToken,
         ProgressCallback onSendProgress,
         ProgressCallback onReceiveProgress,
-  }) async {
+      }) async {
     try {
       Response<T> response = await dio.post<T>(
           path,
@@ -125,10 +125,10 @@ abstract class BaseNetwork {
         return MResponse(data: responseData, success: true);
       }
 
-      dynamic data = result['data'];
+      bool success = result['success'];
 
-      if (data != null) {
-        bool success = result['success'];
+      if (success != null) {
+        dynamic data = result['data'];
         String message = result['message'];
         int total = result['total'];
         return MResponse(data: data, success: success, message: message, total: total);
