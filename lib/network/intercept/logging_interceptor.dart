@@ -34,7 +34,7 @@ class LoggingInterceptor extends Interceptor {
       url:
         ${request.baseUrl + request.path}
       parameters:
-        ${getRequestDataParams(request.data)}
+        ${getRequestDataParams(request)}
       response:
         ${jsonEncode(response.data)}
       '''
@@ -48,7 +48,13 @@ class LoggingInterceptor extends Interceptor {
 
   /// 获取请求参数
   /// @param requestData request.data
-  String getRequestDataParams(dynamic requestData) {
+  String getRequestDataParams(RequestOptions request) {
+
+    if (request.method == 'GET') {
+      return jsonEncode(request.queryParameters);
+    }
+
+    dynamic requestData = request.data;
     String requestParams = '';
     if (requestData is FormData) {
       List<dynamic> fields = requestData.fields;
@@ -77,7 +83,7 @@ class LoggingInterceptor extends Interceptor {
       url：
         ${request.baseUrl + request.path}
       parameters：
-        ${getRequestDataParams(request.data)}
+        ${getRequestDataParams(request)}
       errorMessage：
         ${err.message}
       

@@ -104,8 +104,8 @@ class TokenInterceptor extends Interceptor {
         DateTime expiredTime = DateTime.parse(expiredTimeString);
         bool isExpired =  expiredTime.isBefore(DateTime.now());
 
-        /// 登录后存储的token有效，初始化token header
-        if (!isExpired && _tokenParamMap.length == 0) {
+        /// 登录后存储的token有效，添加token
+        if (!isExpired) {
           addTokenHeaderParam(token.access_token);
         }
 
