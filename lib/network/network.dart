@@ -38,8 +38,8 @@ class Network extends BaseNetwork {
     commonParamsInterceptor = CommonParamsInterceptor();
     setInterceptor(CommonParamsInterceptor());
 
-    /// 设置log拦截器
-    setInterceptor(LoggingInterceptor());
+//    /// 设置log拦截器
+//    setInterceptor(LoggingInterceptor());
 
     _setProxy();
   }
