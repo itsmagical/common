@@ -24,10 +24,13 @@ import 'network.dart';
 ///    network.post('path');
 ///
 ///    /// 创建其他服务的Network对象, 且content-type是 application/json
-///    networkManager.createNetwork('other server baseUrl', options: DioOptions(contentType: Headers.jsonContentType));
+///    networkManager.createNetwork('other server baseUrl',
+///        baseUrlTag: 'base_url_tag',
+///        options: DioOptions(contentType: Headers.jsonContentType)
+///    );
 ///    /// 获取其他服务的Network对象，且使用cookie验证身份
 ///    Network otherNetwork = networkManager
-///        .getNetwork('other server baseUrl')
+///        .getNetwork(baseUrlTag: 'base_url_tag') // or .getNetwork(baseUrl: 'other server baseUrl')
 ///        .setEnableCookie(true);
 ///    /// post options优先级 > 创建Network配置的options
 ///    otherNetwork.post('path', options: DioOptions(contentType: Headers.formUrlEncodedContentType));
@@ -37,10 +40,12 @@ import 'network.dart';
 
 class NetworkManager {
 
-  /// 默认Network, 即项目中最常用的
+  /// 默认使用的Network
   Network _mainNetwork;
   /// Map存储baseUrl对应的Network
   Map<String, Network> _networkMap = HashMap();
+  /// baseUrl标记，存储Tag标记对应的baseUrl
+  Map<String, String> _baseUrlTagMap = HashMap();
 
   NetworkManager._();
 
@@ -64,8 +69,11 @@ class NetworkManager {
 
   /// 创建baseUrl对应的Network
   /// @param options 为Network单独设置Options,优先级大于默认Options
+  /// @param baseUrlTag baseUrl tag标记，tag与url关联,可使用tag获取Network
   /// @param isMainNetwork true: 默认Network
-  void createNetwork(String baseUrl, {DioOptions options, bool isMainNetwork = false}) {
+  void createNetwork(String baseUrl, {
+    String baseUrlTag, DioOptions options, bool isMainNetwork = false
+  }) {
     Network network = _networkMap[baseUrl];
     if (network != null) {
       throw Exception('Network已创建，不能重复创建');
@@ -79,11 +87,23 @@ class NetworkManager {
       _mainNetwork = network;
     }
     _networkMap[baseUrl] = network;
+    /// 存储url标记
+    if (Util.isNotEmptyText(baseUrlTag)) {
+      _baseUrlTagMap[baseUrlTag] = baseUrl;
+    }
   }
 
   /// 获取baseUrl对应的Network
-  /// @param baseUrl null: 默认Network
-  Network getNetwork({String baseUrl}) {
+  /// @param baseUrl 根据url获取Network, null: 默认Network;
+  /// @param baseUrlTag 根据tag获取Network, 优先级小于baseUrl获取
+  Network getNetwork({String baseUrl, String baseUrlTag}) {
+    /// baseUrl为空，tag获取才会生效
+    if (!Util.isNotEmptyText(baseUrl) && Util.isNotEmptyText(baseUrlTag)) {
+      baseUrl = _baseUrlTagMap[baseUrlTag];
+      if (baseUrl == null) {
+        throw Exception('baseUrlTag对应的baseUrl不存在，请确认正确的Tag标记');
+      }
+    }
     if (Util.isNotEmptyText(baseUrl)) {
       Network network = _networkMap[baseUrl];
       if (network == null) {
