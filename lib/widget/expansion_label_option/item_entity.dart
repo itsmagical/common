@@ -10,5 +10,4 @@ class ItemEntity {
 
   /// 附加值
   dynamic extra;
-
 }

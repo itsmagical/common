@@ -38,9 +38,14 @@ class _ItemLabelState extends State<ItemLabel> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (!widget.isOptioned) {
+        if (widget.theme.isMultiple) {
           widget.optionedCallback(widget.entity, widget.index);
+        } else {
+          if (!widget.isOptioned) {
+            widget.optionedCallback(widget.entity, widget.index);
+          }
         }
+
       },
       child: Container(
 //        decoration: BoxDecoration(

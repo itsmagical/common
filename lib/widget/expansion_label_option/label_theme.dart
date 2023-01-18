@@ -7,6 +7,7 @@ class LabelTheme {
     this.spacing = 10,
     this.visibleColumn = 2,
     this.labelHeight = 40,
+    this.isMultiple = false,
     this.textColorBuilder,
     this.decorationBuilder,
   }) {
@@ -33,6 +34,8 @@ class LabelTheme {
   /// label 高度
   /// CustomMultiChildLayout 不能根据子项尺寸决定自身大小
   double labelHeight;
+
+  bool isMultiple;
 
   /// label text color
   Function textColorBuilder;

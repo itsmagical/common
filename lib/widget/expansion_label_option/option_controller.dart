@@ -8,7 +8,7 @@ class OptionController {
     int initOptionedIndex
   }) {
     /// 默认选中的位置
-    optionedIndex = initOptionedIndex ?? 0;
+    optionedIndex = initOptionedIndex;
   }
 
   /// 选中label位置

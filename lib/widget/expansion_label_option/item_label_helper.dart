@@ -1,3 +1,4 @@
+import 'package:common/util/util.dart';
 import 'package:common/widget/expansion_label_option/option_controller.dart';
 import 'package:flutter/material.dart';
 import 'item_label.dart';
@@ -11,6 +12,7 @@ class ItemLabelHelper {
     this.onOptionedCallback,
     this.theme
   }) {
+    optionedIndexes = [];
     resetOptionedIndex();
   }
 
@@ -26,6 +28,8 @@ class ItemLabelHelper {
 
   int optionedIndex;
 
+  List<int> optionedIndexes;
+
   /// 确定位置的label index
   int positionOptionedIndex;
 
@@ -33,16 +37,22 @@ class ItemLabelHelper {
   int optionedColumn = 0;
 
   void resetOptionedIndex() {
-    if (optionController.optionedIndex != optionedIndex) {
+    if (optionController.optionedIndex != optionedIndex || theme.isMultiple) {
       optionedIndex = optionController.optionedIndex;
       positionOptionedIndex = optionedIndex;
+
+      optionedIndexes.clear();
+      optionedIndexes.add(optionedIndex);
       _setOptioned();
     }
   }
 
   void _setOptioned() {
-    if (_itemEntities != null)
-    onOptionedCallback(_itemEntities[optionedIndex], optionedIndex, false);
+    ItemEntity itemEntity;
+    if (_itemEntities != null) {
+      itemEntity = optionedIndex != null ? _itemEntities[optionedIndex] : null;
+    }
+    onOptionedCallback(itemEntity, optionedIndex, false);
   }
 
   void setOptionEntities(List<ItemEntity> entities) {
@@ -53,7 +63,7 @@ class ItemLabelHelper {
       theme.visibleColumn = columnCount;
     }
 
-    if (optionController.optionedIndex >= _itemEntities.length) {
+    if (optionController.optionedIndex != null && optionController.optionedIndex >= _itemEntities.length) {
       optionController.optionedIndex = _itemEntities.length - 1;
       if (optionController.optionedIndex < 0) {
         optionController.optionedIndex = null;
@@ -81,6 +91,10 @@ class ItemLabelHelper {
 
     bool isOptioned = optionedIndex == id;
 
+    if (theme.isMultiple) {
+      isOptioned = optionedIndexes.contains(id);
+    }
+
     return LayoutId(
       id: id,
       child: ItemLabel(
@@ -89,7 +103,19 @@ class ItemLabelHelper {
         entity: entity,
         theme: theme,
         optionedCallback: (bean, index) {
-          optionedIndex = index;
+          if (theme.isMultiple) {
+            if (optionedIndexes.contains(index)) {
+              optionedIndexes.remove(index);
+              if (Util.isNotEmpty(optionedIndexes)) {
+                optionedIndex = optionedIndexes.last;
+              }
+            } else {
+              optionedIndex = index;
+              optionedIndexes.add(index);
+            }
+          } else {
+            optionedIndex = index;
+          }
           // optionedColumn = calcOptionedColumn(index);
           onOptionedCallback(bean, index, true);
         },

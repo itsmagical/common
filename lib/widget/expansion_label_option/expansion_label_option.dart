@@ -149,7 +149,9 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
   }
 
   onOptionedCallback(ItemEntity entity, int index, bool setState) {
-    widget.onOptionedCallback(entity, index);
+    if (entity != null) {
+      widget.onOptionedCallback(entity, index);
+    }
     if (setState) {
       setStateCallback();
     }
