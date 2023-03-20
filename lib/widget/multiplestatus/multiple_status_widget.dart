@@ -75,13 +75,17 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
 //      child: (status != null && status != Status.FINISH) ? statusWidgetHelper.render(status) : widget.child,
 //    );
 
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        widget.child,
-        if (status != null && status != Status.FINISH)
-          statusWidgetHelper.render(status)
-      ],
+    return LayoutBuilder(
+        builder: (context, constraint) {
+          return Stack(
+            fit: constraint.maxHeight != double.infinity ? StackFit.expand : StackFit.loose,
+            children: <Widget>[
+              widget.child,
+              if (status != null && status != Status.FINISH)
+                statusWidgetHelper.render(status)
+            ],
+          );
+        }
     );
 
   }
