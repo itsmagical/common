@@ -37,7 +37,7 @@ class StatusWidgetHelper {
                 return ErrorStatusWidget(handler);
               },
               getEmptyWidget: (handler, context) {
-                return EmptyStatusWidget();
+                return EmptyStatusWidget(handler);
               }
           )
       );

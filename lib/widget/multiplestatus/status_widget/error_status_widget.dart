@@ -23,7 +23,9 @@ class _ErrorStatusWidgetState extends State<ErrorStatusWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.handler.onRetryingCommand();
+        if (widget.handler != null) {
+          widget.handler.onRetryingCommand();
+        }
       },
       child: Container(
         color: Colors.white,
