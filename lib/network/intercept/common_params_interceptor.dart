@@ -36,20 +36,15 @@ class CommonParamsInterceptor extends Interceptor {
   }
 
   @override
-  Future onRequest(RequestOptions options) {
-
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     var headers = options.headers;
-
     if (_headerParamsMap.isNotEmpty) {
       headers.addAll(_headerParamsMap);
     }
-
     if (_commonParamsMap.isNotEmpty) {
-
       if (options.method == 'GET') {
         options.queryParameters.addAll(_commonParamsMap);
       }
-
       if (options.method == 'POST') {
         var data = options.data;
         if (data is Map) {
@@ -57,8 +52,7 @@ class CommonParamsInterceptor extends Interceptor {
         }
       }
     }
-
-    return super.onRequest(options);
+    handler.next(options);
   }
 
 }

@@ -8,9 +8,9 @@ import 'label_theme.dart';
 class ItemLabelHelper {
 
   ItemLabelHelper({
-    this.optionController,
-    this.onOptionedCallback,
-    this.theme
+    required this.optionController,
+    required this.onOptionedCallback,
+    required this.theme
   }) {
     optionedIndexes = [];
     resetOptionedIndex();
@@ -18,20 +18,20 @@ class ItemLabelHelper {
 
   OptionController optionController;
 
-  List<ItemEntity> _itemEntities;
+  List<ItemEntity> _itemEntities = [];
 
   Function onOptionedCallback;
 
   LabelTheme theme;
 
-  List<Widget> itemWidgets;
+  late List<Widget> itemWidgets;
 
-  int optionedIndex;
+  int? optionedIndex;
 
-  List<int> optionedIndexes;
+  late List<int> optionedIndexes;
 
   /// 确定位置的label index
-  int positionOptionedIndex;
+  int? positionOptionedIndex;
 
   /// 选中label所在行数
   int optionedColumn = 0;
@@ -42,20 +42,23 @@ class ItemLabelHelper {
       positionOptionedIndex = optionedIndex;
 
       optionedIndexes.clear();
-      optionedIndexes.add(optionedIndex);
+      optionedIndexes.add(optionedIndex!);
       _setOptioned();
     }
   }
 
   void _setOptioned() {
-    ItemEntity itemEntity;
-    if (_itemEntities != null) {
-      itemEntity = optionedIndex != null ? _itemEntities[optionedIndex] : null;
+    ItemEntity? itemEntity;
+    if (_itemEntities != null && _itemEntities.length > 0) {
+      itemEntity = optionedIndex != null ? _itemEntities[optionedIndex!] : null;
+      onOptionedCallback(itemEntity, optionedIndex, false);
     }
-    onOptionedCallback(itemEntity, optionedIndex, false);
   }
 
   void setOptionEntities(List<ItemEntity> entities) {
+    if (entities.isEmpty) {
+      return;
+    }
     _itemEntities = entities;
     /// 设置的可见行数不能大于数据行数
     int columnCount = getColumnCount();
@@ -63,13 +66,13 @@ class ItemLabelHelper {
       theme.visibleColumn = columnCount;
     }
 
-    if (optionController.optionedIndex != null && optionController.optionedIndex >= _itemEntities.length) {
+    if (optionController.optionedIndex != null && optionController.optionedIndex! >= _itemEntities.length) {
       optionController.optionedIndex = _itemEntities.length - 1;
-      if (optionController.optionedIndex < 0) {
+      if (optionController.optionedIndex! < 0) {
         optionController.optionedIndex = null;
       }
 
-      optionedIndex = optionController.optionedIndex;
+      optionedIndex = optionController.optionedIndex!;
       positionOptionedIndex = optionedIndex;
     }
 
@@ -136,7 +139,7 @@ class ItemLabelHelper {
 
   int getOptionedColumn() {
     if(positionOptionedIndex != null) {
-      optionedColumn = calcOptionedColumn(positionOptionedIndex);
+      optionedColumn = calcOptionedColumn(positionOptionedIndex!);
     }
     return optionedColumn;
   }

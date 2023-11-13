@@ -12,7 +12,7 @@ class SpUtil {
 
   static final SpUtil instance = SpUtil._constructor();
 
-  SharedPreferences _prefs;
+  late SharedPreferences _prefs;
 
   /// 初始化
   Future<SharedPreferences> init() async {

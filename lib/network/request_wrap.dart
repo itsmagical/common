@@ -21,7 +21,7 @@ class RequestWrap {
   /// 获取请求json
   /// @params 请求参数
   /// @pagination 分页参数
-  static String getRequestJson<T>(T params, {Pagination pagination}) {
+  static String getRequestJson<T>(T params, {Pagination? pagination}) {
 
     Request request = Request(
         data: params,

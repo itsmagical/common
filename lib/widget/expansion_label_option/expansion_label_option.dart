@@ -19,14 +19,14 @@ class ExpansionLabelOption extends StatefulWidget {
 
   ExpansionLabelOption({
     this.width,
-    this.theme,
-    this.optionController,
-    @required this.itemEntities,
-    @required this.onOptionedCallback,
+    required this.theme,
+    required this.optionController,
+    required this.itemEntities,
+    required this.onOptionedCallback,
   });
 
   /// 自身宽度 默认最大宽度
-  final int width;
+  final int? width;
 
   final LabelTheme theme;
 
@@ -36,7 +36,7 @@ class ExpansionLabelOption extends StatefulWidget {
   final List<ItemEntity> itemEntities;
 
   /// 选中回调
-  final OptionedCallback<ItemEntity> onOptionedCallback;
+  final OptionedCallback<ItemEntity>? onOptionedCallback;
 
   @override
   State<StatefulWidget> createState() {
@@ -51,11 +51,11 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
     this.theme = theme != null ? theme : LabelTheme();
   }
 
-  LabelTheme theme;
-  AnimationController controller;
-  Animation animation;
+  late LabelTheme theme;
+  late AnimationController controller;
+  late Animation animation;
 
-  ItemLabelHelper labelHelper;
+  late ItemLabelHelper labelHelper;
 
   @override
   void initState() {
@@ -148,9 +148,9 @@ class _ExpansionLabelOptionState extends State<ExpansionLabelOption> with Single
     );
   }
 
-  onOptionedCallback(ItemEntity entity, int index, bool setState) {
-    if (entity != null) {
-      widget.onOptionedCallback(entity, index);
+  onOptionedCallback(ItemEntity? entity, int? index, bool setState) {
+    if (entity != null && index != null) {
+      widget.onOptionedCallback!(entity, index);
     }
     if (setState) {
       setStateCallback();

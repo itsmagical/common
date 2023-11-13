@@ -1,3 +1,13 @@
+import 'package:common/common.dart';
+import 'package:common/network/dio_options.dart';
+import 'package:common/network/network_manager.dart';
+import 'package:common/util/log_util.dart';
+import 'package:common/util/navigator_util.dart';
+import 'package:common/widget/expansion_label_option/expansion_label_option.dart';
+import 'package:common/widget/expansion_label_option/item_entity.dart';
+import 'package:common/widget/expansion_label_option/label_theme.dart';
+import 'package:common/widget/expansion_label_option/option_controller.dart';
+import 'package:example/status_demo.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,7 +42,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -52,6 +62,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  late OptionController controller;
+  List<ItemEntity> itemEntities = [];
+
+  @override
+  void initState() {
+    controller = OptionController(initOptionedIndex: null);
+//    controller = OptionController(initOptionedIndex: null);
+    NetworkManager.instance.createNetwork('http://192.168.20.141:8080/snmis/',
+        baseUrlTag: 'uia_base_url',
+        options: DioOptions(contentType: Headers.formUrlEncodedContentType)
+    );
+    NetworkManager.instance.getNetwork(baseUrlTag: 'uia_base_url');
+    var networkManager = NetworkManager.instance;
+    networkManager.createNetwork('http://192.168.20.141:8081/snmis/',
+        baseUrlTag: 'base_url',
+        options: DioOptions(contentType: Headers.jsonContentType)
+    );
+    super.initState();
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -59,7 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+//      _counter++;
+
+      controller.setOptionedIndex(null);
     });
   }
 
@@ -76,6 +108,11 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: [
+          IconButton(icon: Icon(Icons.add), onPressed: () {
+            NavigatorUtil.push(context, StatusDemo());
+          })
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -104,6 +141,47 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            Container(
+
+            ),
+            ExpansionLabelOption(
+              optionController: controller,
+                theme: LabelTheme(
+                  rowCount: 2,
+                  isMultiple: false
+                ),
+                itemEntities: [
+                  ItemEntity(
+                    name: "a"
+                  ),
+                   ItemEntity(
+                    name: "b"
+                  ),
+                  ItemEntity(
+                    name: "c"
+                  ),
+
+                ],
+                onOptionedCallback: (entity, index) {
+                if (itemEntities.contains(entity)) {
+                  itemEntities.remove(entity);
+                  return;
+                }
+                if (index == 0 && itemEntities.length > 0) {
+                  itemEntities.clear();
+                  controller.setOptionedIndex(0);
+                  return;
+                }
+                if (index > 0 && itemEntities.length == 1 && itemEntities.first.name == "a") {
+                  itemEntities.clear();
+                  controller.setOptionedIndex(index);
+                  return;
+                }
+                itemEntities.add(entity);
+                LogUtil.d('-----${itemEntities.toString()}');
+                print('$index');
+                }
+            )
           ],
         ),
       ),

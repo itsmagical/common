@@ -4,9 +4,9 @@ import 'status.dart';
 /// 状态控制
 class StatusController {
 
-  Status _status;
+  Status? _status;
 
-  ValueChanged<Status> _statusChangedCallback;
+  ValueChanged<Status>? _statusChangedCallback;
 
   void setStatusChangedCallback(ValueChanged<Status> callback) {
     _statusChangedCallback = callback;
@@ -54,11 +54,11 @@ class StatusController {
   void _statusChanged(Status status) {
     _status = status;
     if (_statusChangedCallback != null) {
-      _statusChangedCallback(status);
+      _statusChangedCallback!(status);
     }
   }
 
-  Status getStatus() {
+  Status? getStatus() {
     return _status;
   }
 

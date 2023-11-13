@@ -8,16 +8,16 @@ class LabelTheme {
     this.visibleColumn = 2,
     this.labelHeight = 40,
     this.isMultiple = false,
-    this.textColorBuilder,
-    this.decorationBuilder,
+    Function? textColorBuilder,
+    Function? decorationBuilder,
   }) {
 
     if (textColorBuilder == null) {
-      textColorBuilder = _textColorBuilder;
+      this.textColorBuilder = _textColorBuilder;
     }
 
     if (decorationBuilder == null) {
-      decorationBuilder = _decorationBuilder;
+      this.decorationBuilder = _decorationBuilder;
     }
 
   }
@@ -38,10 +38,10 @@ class LabelTheme {
   bool isMultiple;
 
   /// label text color
-  Function textColorBuilder;
+  late Function textColorBuilder;
 
   /// label BoxDecoration
-  Function decorationBuilder;
+  late Function decorationBuilder;
 
   BoxDecoration _decorationBuilder(bool isOptioned) {
     return BoxDecoration(

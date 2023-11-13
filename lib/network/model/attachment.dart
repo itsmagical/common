@@ -6,20 +6,20 @@
 
 class Attachment {
   /// 附加id
-  int dataId;
+  int? dataId;
   /// 附件名称
-  String fileName;
+  String? fileName;
   /// 附件路径
-  String storePath;
+  String? storePath;
   /// 附件类型
-  int type;
+  int? type;
   /// 附件大小
-  int size;
+  int? size;
   /// 单位
-  String unit;
+  String? unit;
   /// 附件包id
-  int attachmentPacketId;
-  String fixedPath;
+  int? attachmentPacketId;
+  String? fixedPath;
 
   Attachment(
       {this.dataId,

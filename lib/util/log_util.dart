@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 class LogUtil {
   static var _separator = "=";
@@ -10,9 +11,9 @@ class LogUtil {
   static String _startLine = "$_split$_title$_split";
   static String _endLine = "$_split$_separator$_separator$_separator$_split";
 
-  static void init({String title, @required bool isDebug,int limitLength}) {
-    _title = title;
-    _isDebug = isDebug;
+  static void init({String? title, @required bool? isDebug,int? limitLength}) {
+    _title = title ?? _title;
+    _isDebug = isDebug ?? _isDebug;
     _limitLength = limitLength??=_limitLength;
     _startLine = "$_split$_title$_split";
     var endLineStr = StringBuffer();
@@ -28,8 +29,10 @@ class LogUtil {
 
   //仅Debug模式可见
   static void d(dynamic obj) {
-    if (_isDebug) {
-      _log(obj.toString());
+    if (kDebugMode) {
+      if (_isDebug) {
+        _log(obj.toString());
+      }
     }
   }
 

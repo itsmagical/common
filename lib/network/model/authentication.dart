@@ -8,18 +8,18 @@ import 'refresh_token.dart';
 class Authentication {
 
   /// token
-  String access_token;
+  String? access_token;
 
   /// 类型
-  String token_type;
+  String? token_type;
 
   /// 刷新token参数
-  RefreshToken refresh_token;
+  RefreshToken? refresh_token;
 
-  int expires_in;
+  int? expires_in;
 
   /// 过期时间
-  String expiredTime;
+  String? expiredTime;
 
   Authentication({
     this.access_token,
@@ -44,7 +44,7 @@ class Authentication {
     data['access_token'] = this.access_token;
     data['token_type'] = this.token_type;
     if (this.refresh_token != null) {
-      data['refresh_token'] = this.refresh_token.toJson();
+      data['refresh_token'] = this.refresh_token!.toJson();
     }
     data['expiredTime'] = this.expiredTime;
     return data;

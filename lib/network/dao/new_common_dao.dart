@@ -28,9 +28,9 @@ class NewCommonDao extends BaseDao {
   /// 查询字典值
   /// @param type
   Future<MResponse> queryDictionaries({
-    @required String type,
-    @required Network network,
-    Options options,
+    required String type,
+    required Network network,
+    Options? options,
   }) async {
     String path = 'dictDataMgmt/listDictionarys.do';
     Map<String, dynamic> params = {
@@ -38,7 +38,7 @@ class NewCommonDao extends BaseDao {
     };
     MResponse response = await network.post(path, data: params, options: options);
 
-    if (response.success) {
+    if (response.success ?? false) {
       var data = response.data;
       if (data is List && Util.isNotEmpty(data)) {
         List<Dictionary> dictionaries = [];
@@ -55,8 +55,8 @@ class NewCommonDao extends BaseDao {
   /// 查询附件包内的附件
   /// @param attachmentPacketId
   Future<MResponse> queryAttachments({
-    @required int attachmentPacketId,
-    @required Network network,
+    required int attachmentPacketId,
+    required Network network,
   }) async {
     String path = 'attachMgmt/listAttachments.do';
     Map<String, dynamic> params = {
@@ -66,7 +66,7 @@ class NewCommonDao extends BaseDao {
     MResponse response = await network.post(path, data: params,
         options: Options(contentType: Headers.formUrlEncodedContentType));
 
-    if (response.success) {
+    if (response.success ?? false) {
       var data = response.data;
       if (data is List && Util.isNotEmpty(data)) {
         List<Attachment> attachments = [];
@@ -86,10 +86,10 @@ class NewCommonDao extends BaseDao {
   /// @param moduleType 文件所属功能模块类型
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> uploadFiles({
-    @required List<File> files,
+    required List<File> files,
     int attachmentPacketId = -1,
-    String moduleType,
-    @required Network network,
+    required String moduleType,
+    required Network network,
   }) async {
     String path = 'attachMgmt/multipleFileUpload.do';
     var formData = FormData();
@@ -106,7 +106,7 @@ class NewCommonDao extends BaseDao {
       ..add(MapEntry("moduleType", moduleType));
 
     MResponse response = await network.post(path, data: formData);
-    if (response.success) {
+    if (response.success ?? false) {
       var data = response.data;
       if (data != null) {
         /// 多文件上传成功后，后台只返回一个附件的信息，而不是上传的附件集合
@@ -123,9 +123,9 @@ class NewCommonDao extends BaseDao {
   /// @param attachmentId附件id
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachments({
-    @required int attachmentPacketId,
-    @required Network network,
-    Options options
+    required int attachmentPacketId,
+    required Network network,
+    Options? options
   }) async {
     String path = 'attachMgmt/deleteAttachments.do';
     Map<String, dynamic> params = {
@@ -140,9 +140,9 @@ class NewCommonDao extends BaseDao {
   /// @param dataIds 附件id
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachment({
-    @required String dataIds,
-    @required Network network,
-    Options options
+    required String dataIds,
+    required Network network,
+    Options? options
   }) async {
     String path = 'attachMgmt/deleteOnlyAttach.do';
     Map<String, dynamic> params = {
@@ -155,9 +155,9 @@ class NewCommonDao extends BaseDao {
 
   /// 拷贝附件
   Future<MResponse> copyAttachment({
-    @required String packetIdStr,
-    @required Network network,
-    Options options
+    required String packetIdStr,
+    required Network network,
+    Options? options
   }) async {
     String path = 'attachMgmt/copyAttach.do';
     Map<String, dynamic> params = {

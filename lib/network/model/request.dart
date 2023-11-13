@@ -3,9 +3,9 @@
 import 'pagination.dart';
 
 class Request<T> {
-  T data;
-  String requestTime;
-  Pagination pagination;
+  T? data;
+  String? requestTime;
+  Pagination? pagination;
 
   Request({
     this.data,
@@ -15,14 +15,18 @@ class Request<T> {
 
   Request.fromJson(Map<String, dynamic> json) {
     data = json['data'];
-    pagination = json['pagination'];
+    pagination = json['pagination'] != null
+        ? new Pagination.fromJson(json['pagination'])
+        : null;
     requestTime = json['requestTime'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['data'] = this.data;
-    data['pagination'] = this.pagination;
+    if (this.pagination != null) {
+      data['pagination'] = this.pagination!.toJson();
+    }
     data['requestTime'] = this.requestTime;
     return data;
   }

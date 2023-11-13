@@ -5,20 +5,20 @@ import 'package:flutter/cupertino.dart';
 class OptionController {
 
   OptionController({
-    int initOptionedIndex
+    int? initOptionedIndex
   }) {
     /// 默认选中的位置
     optionedIndex = initOptionedIndex;
   }
 
   /// 选中label位置
-  int optionedIndex;
+  int? optionedIndex;
 
-  VoidCallback _setStateCallback;
-  VoidCallback _resetOptionedIndexCallback;
+  late VoidCallback _setStateCallback;
+  late VoidCallback _resetOptionedIndexCallback;
 
   /// 设置选中位置
-  setOptionedIndex(int index) {
+  setOptionedIndex(int? index) {
     optionedIndex = index;
     _reset();
   }

@@ -12,10 +12,10 @@ import 'package:dio/dio.dart';
 class LoggingInterceptor extends Interceptor {
 
   @override
-  Future onResponse(Response response) {
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
 
     try {
-      RequestOptions request = response.request;
+      RequestOptions request = response.requestOptions;
 
       Map<String, dynamic> headerMap = request.headers;
 
@@ -42,8 +42,7 @@ class LoggingInterceptor extends Interceptor {
     } catch(error) {
       LogUtil.d('onResponse：log拦截器出现错误');
     }
-
-    return super.onResponse(response);
+    handler.next(response);
   }
 
   /// 获取请求参数
@@ -74,9 +73,9 @@ class LoggingInterceptor extends Interceptor {
   }
 
   @override
-  Future onError(DioError err) {
+  void onError(DioException exception, ErrorInterceptorHandler handler) {
     try {
-      var request = err.request;
+      var request = exception.requestOptions;
 
       LogUtil.d(
           '''
@@ -85,7 +84,7 @@ class LoggingInterceptor extends Interceptor {
       parameters：
         ${getRequestDataParams(request)}
       errorMessage：
-        ${err.message}
+        ${exception.message}
       
       '''
       );
@@ -93,7 +92,7 @@ class LoggingInterceptor extends Interceptor {
       LogUtil.d('onError：log拦截器出现错误');
     }
 
-    return super.onError(err);
+    handler.next(exception);
   }
 
 }

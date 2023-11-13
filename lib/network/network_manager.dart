@@ -41,7 +41,7 @@ import 'network.dart';
 class NetworkManager {
 
   /// 默认使用的Network
-  Network _mainNetwork;
+  Network? _mainNetwork;
   /// Map存储baseUrl对应的Network
   Map<String, Network> _networkMap = HashMap();
   /// baseUrl标记，存储Tag标记对应的baseUrl
@@ -52,9 +52,9 @@ class NetworkManager {
   static NetworkManager instance = NetworkManager._();
 
   /// 默认Options
-  DioOptions dioOptions;
+  DioOptions? dioOptions;
   /// 网络代理地址
-  String proxy;
+  String? proxy;
 
   /// 设置默认Options
   setDioOptions(DioOptions options) {
@@ -72,9 +72,9 @@ class NetworkManager {
   /// @param baseUrlTag baseUrl tag标记，tag与url关联,可使用tag获取Network
   /// @param isMainNetwork true: 默认Network
   void createNetwork(String baseUrl, {
-    String baseUrlTag, DioOptions options, bool isMainNetwork = false
+    String? baseUrlTag, DioOptions? options, bool isMainNetwork = false
   }) {
-    Network network = _networkMap[baseUrl];
+    Network? network = _networkMap[baseUrl];
     if (network != null) {
       throw Exception('Network已创建，不能重复创建');
     }
@@ -89,14 +89,14 @@ class NetworkManager {
     _networkMap[baseUrl] = network;
     /// 存储url标记
     if (Util.isNotEmptyText(baseUrlTag)) {
-      _baseUrlTagMap[baseUrlTag] = baseUrl;
+      _baseUrlTagMap[baseUrlTag!] = baseUrl;
     }
   }
 
   /// 获取baseUrl对应的Network
   /// @param baseUrl 根据url获取Network, null: 默认Network;
   /// @param baseUrlTag 根据tag获取Network, 优先级小于baseUrl获取
-  Network getNetwork({String baseUrl, String baseUrlTag}) {
+  Network getNetwork({String? baseUrl, String? baseUrlTag}) {
     /// baseUrl为空，tag获取才会生效
     if (!Util.isNotEmptyText(baseUrl) && Util.isNotEmptyText(baseUrlTag)) {
       baseUrl = _baseUrlTagMap[baseUrlTag];
@@ -105,16 +105,16 @@ class NetworkManager {
       }
     }
     if (Util.isNotEmptyText(baseUrl)) {
-      Network network = _networkMap[baseUrl];
+      Network? network = _networkMap[baseUrl];
       if (network == null) {
         throw Exception('请先使用createNetwork(baseUrl)创建baseUrl对应的Network ...');
       }
-      return _networkMap[baseUrl];
+      return _networkMap[baseUrl]!;
     }
 
     if (_mainNetwork == null) {
       throw Exception('请先使用createNetwork(baseUrl, isMainNetwork = true)创建默认的Network ...');
     }
-    return _mainNetwork;
+    return _mainNetwork!;
   }
 }

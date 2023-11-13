@@ -6,7 +6,7 @@ class ItemEntity {
   });
 
   /// 显示的标签名称
-  String name;
+  String? name;
 
   /// 附加值
   dynamic extra;

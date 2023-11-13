@@ -4,13 +4,13 @@
 class Pagination {
 
   /// 标记是否分页
-  bool needsPaginate;
+  bool? needsPaginate;
 
   /// 分页的起始记录序号
-  int startPos;
+  int? startPos;
 
   /// 每页需要取出的记录大小。
-  int amount;
+  int? amount;
 
   Pagination({this.needsPaginate, this.startPos, this.amount}) {
     needsPaginate = true;

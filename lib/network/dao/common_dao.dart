@@ -27,10 +27,10 @@ class CommonDao extends BaseDao {
 
   /// 查询字典值
   Future<MResponse> queryDictionaries({
-    @required String tabName,
-    @required String attribute,
-    @required Network network,
-    Options options
+    required String tabName,
+    required String attribute,
+    required Network network,
+    Options? options
   }) async {
     String path = 'mobileAppBasicMgmt/deleteAttachment.do';
     Map<String, dynamic> params = getRequestJsonMap({
@@ -39,7 +39,7 @@ class CommonDao extends BaseDao {
     });
     MResponse response = await network.post(path, data: params, options: options);
 
-    if (response.success) {
+    if (response.success ?? false) {
       var data = response.data;
       if (data is List && Util.isNotEmpty(data)) {
         List<Dictionary> dictionaries = [];
@@ -55,9 +55,9 @@ class CommonDao extends BaseDao {
 
   /// 查询附件
   Future<MResponse> queryAttachments({
-    @required int attachmentPacketId,
-    @required Network network,
-    Options options
+    required int attachmentPacketId,
+    required Network network,
+    Options? options
   }) async {
     String path = 'mobileAppBasicMgmt/listAttachments.do';
     Map<String, dynamic> params = getRequestJsonMap({
@@ -66,7 +66,7 @@ class CommonDao extends BaseDao {
 
     MResponse response = await network.post(path, data: params, options: options);
 
-    if (response.success) {
+    if (response.success ?? false) {
       var data = response.data;
       if (data is List && Util.isNotEmpty(data)) {
         List<Attachment> attachments = [];
@@ -86,10 +86,10 @@ class CommonDao extends BaseDao {
   /// @param moduleType 文件所属功能模块类型
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> uploadFiles({
-    @required List<File> files,
-    String attachmentPacketId = '-1',
-    String moduleType,
-    @required Network network,
+    required List<File> files,
+    String? attachmentPacketId = '-1',
+    required String moduleType,
+    required Network network,
   }) async {
     String path = 'mobileAppBasicMgmt/uploadAttachments.do';
     var formData = FormData();
@@ -106,7 +106,7 @@ class CommonDao extends BaseDao {
       ..add(MapEntry("moduleType", moduleType));
 
     MResponse response = await network.post(path, data: formData);
-    if (response.success) {
+    if (response.success ?? false) {
       var data = response.data;
       if (data != null) {
         response.data = AttachmentPacket.fromJson(data);
@@ -120,9 +120,9 @@ class CommonDao extends BaseDao {
   /// @param attachmentId附件id
   /// @param network 执行本次上传的network，null则使用默认Network
   Future<MResponse> deleteAttachment({
-    @required int attachmentId,
-    @required Network network,
-    Options options
+    required int attachmentId,
+    required Network network,
+    Options? options
   }) async {
     String path = 'mobileAppBasicMgmt/deleteAttachment.do';
     Map<String, dynamic> params = getRequestJsonMap({

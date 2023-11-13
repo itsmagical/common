@@ -5,11 +5,11 @@
 /// @created at 2020/12/23 10:50
 
 class Permission {
-  int dataId;
-  int parentId;
-  String name;
-  String menuText;
-  int menuLevel;
+  int? dataId;
+  int? parentId;
+  String? name;
+  String? menuText;
+  int? menuLevel;
 
   Permission(
       {this.dataId, this.parentId, this.name, this.menuText, this.menuLevel});

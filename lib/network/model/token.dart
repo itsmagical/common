@@ -7,18 +7,18 @@
 class Token {
 
   /// token
-  String access_token;
+  String? access_token;
 
   /// 类型
-  String token_type;
+  String? token_type;
 
   /// 刷新token参数
-  String refresh_token;
+  String? refresh_token;
 
-  int expires_in;
+  int? expires_in;
 
   /// 过期时间
-  String expiredTime;
+  String? expiredTime;
 
   Token({
     this.access_token,

@@ -6,19 +6,19 @@
 
 class Dictionary {
   /// 字典值tableName
-  String tableName;
+  String? tableName;
   /// 字典值attribute
-  String attribute;
+  String? attribute;
   /// 此条字典值的value
-  int value;
+  int? value;
   /// 字典值描述
-  String description;
+  String? description;
 
   ///--------接版本接口字典值------------///
   /// 字典名称
-  String dictLabel;
+  String? dictLabel;
   /// 字典纸
-  int dictValue;
+  int? dictValue;
 
   Dictionary({
     this.tableName,

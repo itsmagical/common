@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class LoadingStatusWidget extends StatefulWidget {
 
   LoadingStatusWidget({
-    this.context
+    required this.context
   });
 
   final BuildContext context;
@@ -19,7 +19,7 @@ class LoadingStatusWidget extends StatefulWidget {
 class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
 
   _LoadingStatusWidgetState({
-    this.statusContext
+    required this.statusContext
   });
 
   BuildContext statusContext;

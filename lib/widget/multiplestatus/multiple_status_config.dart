@@ -1,10 +1,28 @@
 
+
+import 'package:common/widget/multiplestatus/status_widget/empty_status_widget.dart';
+import 'package:common/widget/multiplestatus/status_widget/error_status_widget.dart';
+import 'package:common/widget/multiplestatus/status_widget/loading_status_widget.dart';
+
 import 'status_widget_provider.dart';
 
 /// 状态加载配置
 class MultipleStatusConfig {
 
-  MultipleStatusConfig._constructor();
+  MultipleStatusConfig._constructor() {
+    /// 配置默认状态布局
+    _provider = StatusWidgetProvider(
+        getLoadingWidget: (handler, context) {
+          return LoadingStatusWidget(context: context);
+        },
+        getErrorWidget: (handler, context) {
+          return ErrorStatusWidget(handler);
+        },
+        getEmptyWidget: (handler, context) {
+          return EmptyStatusWidget(handler);
+        }
+    );
+  }
 
   static final MultipleStatusConfig _instance = MultipleStatusConfig._constructor();
 
@@ -13,7 +31,7 @@ class MultipleStatusConfig {
   }
 
   /// 状态布局Provider
-  StatusWidgetProvider _provider;
+  late StatusWidgetProvider _provider;
 
   void setStatusWidgetProvider(StatusWidgetProvider provider) {
     _provider = provider;

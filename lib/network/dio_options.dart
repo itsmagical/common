@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 class DioOptions {
 
   DioOptions({
-    this.connectTimeout = 10 * 1000,
-    this.receiveTimeout = 20 * 1000,
+    this.connectTimeout = const Duration(milliseconds: 10 * 1000),
+    this.receiveTimeout = const Duration(milliseconds: 20 * 1000),
     this.contentType = Headers.jsonContentType,
     this.responseType = ResponseType.json,
     extra,
@@ -15,10 +15,10 @@ class DioOptions {
   }
 
   /// 连接超时时间 毫秒
-  int connectTimeout;
+  Duration connectTimeout;
 
   /// 接收超时时间 毫秒
-  int receiveTimeout;
+  Duration receiveTimeout;
 
   /// 请求头 content-type
   /// [BaseOptions.contentType]将contentType添加到headers中
@@ -28,10 +28,10 @@ class DioOptions {
   /// 响应类型
   ResponseType responseType;
 
-  Map<String, dynamic> extra;
+  late Map<String, dynamic> extra;
 
   /// header
-  Map<String, dynamic> headers;
+  late Map<String, dynamic> headers;
 
 
 

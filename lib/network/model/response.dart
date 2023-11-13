@@ -3,15 +3,15 @@
 class MResponse<T> {
 
   /// 响应数据
-  T data;
+  T? data;
 
   /// 请求状态
-  bool success;
+  bool? success;
 
   /// 处理信息
-  String message;
+  String? message;
 
-  int total;
+  int? total;
 
   MResponse({
     this.data,
@@ -22,7 +22,7 @@ class MResponse<T> {
 
   MResponse.fromJson(Map<String, dynamic> json) {
     data = json['data'];
-    success = json['success'];
+    success = json['success'] ?? false;
     message = json['message'];
     total = json['total'];
   }

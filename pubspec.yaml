@@ -6,39 +6,40 @@ homepage: https://flutter.dev/
 publish_to: http://192.168.20.141:8080
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   # http 请求库
-  dio: ^3.0.8
+  dio: ^5.3.3
   # cookie
-  cookie_jar: ^1.0.0
-  dio_cookie_manager: ^1.0.0
+  cookie_jar: ^4.0.8
+  dio_cookie_manager: ^3.1.0+1
   # 格式化时间
-  date_format: ^1.0.8
+  date_format: ^2.0.7
   # 本地存储
-  shared_preferences: ^0.5.12+4
+  shared_preferences: 2.2.1
   # 动态权限
-  permission_handler: 5.1.0+2
+  permission_handler: 11.0.1
   # RSA加密
-  encrypt: ^3.3.1
+  encrypt: 5.0.3
 
   # 选择图片
-  image_picker: ^0.6.7+21
+  image_picker: 1.0.4
   # WebView
-  webview_flutter: ^0.3.24
+#  webview_flutter: 4.2.4
   # 图表
-  flutter_echarts: ^1.3.6
+  flutter_echarts: ^2.5.0
   # 刷新
   flutter_easyrefresh: ^2.1.8
+  flutter_cupertino_datetime_picker: 3.0.0
   # 时间选择器 该分支支持SDK1.20
-  flutter_cupertino_date_picker:
-    git:
-      url: https://github.com/arbyazra123/flutter-cupertino-date-picker.git
-      ref: updatedDiagnosticable
+#  flutter_cupertino_date_picker:
+#    git:
+#      url: https://github.com/arbyazra123/flutter-cupertino-date-picker.git
+#      ref: updatedDiagnosticable
 
 
 dev_dependencies:

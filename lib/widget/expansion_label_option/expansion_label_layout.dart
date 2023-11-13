@@ -10,11 +10,11 @@ import 'label_theme.dart';
 class ExpansionLabelLayout extends CustomMultiChildLayout {
 
   ExpansionLabelLayout(
-      {Key key,
-        this.children,
-        this.optionedColumn,
-        this.theme,
-        this.animationValue,
+      {Key? key,
+        required this.children,
+        required this.optionedColumn,
+        required this.theme,
+        required this.animationValue,
       }) :
         super(
           key: key,
@@ -39,7 +39,11 @@ class ExpansionLabelLayout extends CustomMultiChildLayout {
 
 class ExpansionLabelLayoutDelegate extends MultiChildLayoutDelegate {
 
-  ExpansionLabelLayoutDelegate({this.children, this.optionedColumn, this.animationValue, LabelTheme theme}) {
+  ExpansionLabelLayoutDelegate({
+    required this.children,
+    required this.optionedColumn,
+    required this.animationValue,
+    required LabelTheme theme}) {
     ids = getLayoutIds(children);
 
     rowCount = theme.rowCount;
@@ -52,13 +56,13 @@ class ExpansionLabelLayoutDelegate extends MultiChildLayoutDelegate {
   }
 
   List<Widget> children;
-  int rowCount;
-  int visibleColumn;
-  double labelWidth;
-  double labelHeight;
-  double spacing;
-  int columnCount;
-  List<int> ids;
+  late int rowCount;
+  late int visibleColumn;
+  late double labelWidth;
+  late double labelHeight;
+  late double spacing;
+  late int columnCount;
+  late List<int> ids;
 
   int optionedColumn;
 
@@ -89,7 +93,7 @@ class ExpansionLabelLayoutDelegate extends MultiChildLayoutDelegate {
   void performLayout(Size size) {
 
     double xOffset;
-    double yOffset;
+    double? yOffset;
     int column = -1;
 
     double y;
@@ -108,7 +112,7 @@ class ExpansionLabelLayoutDelegate extends MultiChildLayoutDelegate {
         }
         double offsetHeight = getOffsetHeight(optionedColumn);
         y = animationValue * offsetHeight - offsetHeight;
-        positionChild(id, Offset(xOffset, childSize.height * column + yOffset + y));
+        positionChild(id, Offset(xOffset, childSize.height * column + yOffset! + y));
       }
     }
   }

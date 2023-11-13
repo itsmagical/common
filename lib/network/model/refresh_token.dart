@@ -9,11 +9,11 @@
 class RefreshToken {
 
   /// refreshToken
-  String value;
+  String? value;
 
   /// refreshToken过期时间，refreshToken过期后需重新登录
   /// refreshToken手机端暂时定为不过期，暂时不需要处理过期重新登录
-  String expiration;
+  String? expiration;
 
   RefreshToken({
     this.value,

@@ -1,5 +1,7 @@
 
 
+import 'dart:ui';
+
 import 'package:common/network/model/authentication.dart';
 import 'package:common/network/model/refresh_token.dart';
 import 'package:common/network/model/response.dart';
@@ -15,7 +17,10 @@ import 'package:dio/dio.dart';
 /// 刷新token(refresh_token)过期后需重新登录
 class TokenInterceptor extends Interceptor {
 
-  TokenInterceptor({String baseUrl, this.reLoginCallback}) {
+  TokenInterceptor({
+    required String baseUrl,
+    this.reLoginCallback
+  }) {
 
     _dio = Dio();
     _dio.options.baseUrl = baseUrl;
@@ -30,15 +35,15 @@ class TokenInterceptor extends Interceptor {
   Map<String, dynamic> _tokenParamMap = {};
 
   /// 请求token的地址
-  String baseUrl;
+  // String baseUrl;
 
   /// 刷新token过期，重新登录回调
-  VoidCallback reLoginCallback;
+  VoidCallback? reLoginCallback;
 
-  Dio _dio;
+  late Dio _dio;
 
   @override
-  Future onRequest(RequestOptions options) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     var headers = options.headers;
 
     bool reloginEnable = true;
@@ -46,7 +51,7 @@ class TokenInterceptor extends Interceptor {
     if (headers != null) {
       if (headers.containsKey(ignoreTokenInterceptor)) {
         headers.remove(ignoreTokenInterceptor);
-        return options;
+        return handler.next(options);
       }
 
       if (headers.containsKey(disableReLoginCallback)) {
@@ -64,7 +69,7 @@ class TokenInterceptor extends Interceptor {
 
     headers.addAll(_tokenParamMap);
 
-    return options;
+    return handler.next(options);
 
     // return super.onRequest(options);
   }
@@ -73,23 +78,23 @@ class TokenInterceptor extends Interceptor {
   /// @return true token is expired
   bool isTokenExpiredTime(bool reloginEnable) {
 
-    Authentication token = UserUtil.instance.getToken();
+    Authentication? token = UserUtil.instance.getToken();
 
     if (token != null) {
 
-      RefreshToken refreshToken = token.refresh_token;
+      RefreshToken? refreshToken = token.refresh_token;
 
       /// 刷新token为null
-      if (!Util.isNotNull(refreshToken) || !Util.isNotEmptyText(refreshToken.value)) {
+      if (!Util.isNotNull(refreshToken) || !Util.isNotEmptyText(refreshToken?.value)) {
         reLogin(reloginEnable);
         return false;
       }
 
       /// 刷新token的过期时间
-      String expiration = refreshToken.expiration;
+      String? expiration = refreshToken?.expiration;
 
       if (Util.isNotEmptyText(expiration)) {
-        DateTime expiredTime = DateTime.parse(expiration);
+        DateTime expiredTime = DateTime.parse(expiration!);
         bool isExpired = expiredTime.isBefore(DateTime.now());
         /// 刷新过期，重新登录
         if (isExpired) {
@@ -98,15 +103,15 @@ class TokenInterceptor extends Interceptor {
         }
       }
 
-      String expiredTimeString = token.expiredTime;
+      String? expiredTimeString = token.expiredTime;
 
       if (Util.isNotEmptyText(expiredTimeString)) {
-        DateTime expiredTime = DateTime.parse(expiredTimeString);
+        DateTime expiredTime = DateTime.parse(expiredTimeString!);
         bool isExpired =  expiredTime.isBefore(DateTime.now());
 
         /// 登录后存储的token有效，添加token
         if (!isExpired) {
-          addTokenHeaderParam(token.access_token);
+          addTokenHeaderParam(token.access_token!);
         }
 
         return isExpired;
@@ -124,11 +129,11 @@ class TokenInterceptor extends Interceptor {
     Map<String, String> headers = {};
     headers['Authorization'] = 'Basic c2luaWVjbzpzaW5pZWNv';
 
-    Authentication authentication = UserUtil.instance.getToken();
+    Authentication? authentication = UserUtil.instance.getToken();
 
     Map<String, String> params = {};
     params['grant_type'] = 'refresh_token';
-    params['refresh_token'] = authentication.refresh_token.value;
+    params['refresh_token'] = authentication?.refresh_token?.value ?? '';
 
     _dio.options.headers = headers;
     try {
@@ -138,9 +143,9 @@ class TokenInterceptor extends Interceptor {
         var tokenMap = response.data;
         print('token刷新成功：${tokenMap.toString()}');
         Token token = Token.fromJson(tokenMap);
-        authentication.access_token = token.access_token;
-        authentication.expiredTime = token.expiredTime;
-        authentication.refresh_token.value = token.refresh_token;
+        authentication?.access_token = token.access_token;
+        authentication?.expiredTime = token.expiredTime;
+        authentication?.refresh_token?.value = token.refresh_token;
         UserUtil.instance.saveToken(authentication);
         addTokenHeaderParam(token.access_token);
       } else {
@@ -159,8 +164,10 @@ class TokenInterceptor extends Interceptor {
 
   /// 添加token
   /// @param token
-  void addTokenHeaderParam(String param) {
-    _tokenParamMap['Authorization'] = "Bearer " + param;
+  void addTokenHeaderParam(String? param) {
+    if (param != null) {
+      _tokenParamMap['Authorization'] = "Bearer " + param;
+    }
   }
 
   /// 清除token
@@ -172,8 +179,8 @@ class TokenInterceptor extends Interceptor {
   /// 登录回调
   reLogin(bool reloginEnable) {
     if (reLoginCallback != null) {
-      if (reloginEnable) {
-        reLoginCallback();
+      if (reLoginCallback != null && reloginEnable) {
+        reLoginCallback!();
       }
     }
   }

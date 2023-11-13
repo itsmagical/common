@@ -6,8 +6,8 @@ import 'package:common/network/intercept/logging_interceptor.dart';
 import 'package:common/network/network_manager.dart';
 import 'package:common/util/util.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -24,15 +24,15 @@ import 'base_network.dart';
 class Network extends BaseNetwork {
 
   Network({
-    @required String baseUrl,
-    DioOptions dioOptions,
+    required String baseUrl,
+    DioOptions? dioOptions,
   }) : super(baseUrl, dioOptions: dioOptions) {
     _init();
   }
 
-  DefaultCookieJar _cookieJar;
+  DefaultCookieJar? _cookieJar;
   /// RESTful规范参数拦截器
-  CommonParamsInterceptor commonParamsInterceptor;
+  late CommonParamsInterceptor commonParamsInterceptor;
 
   _init() {
     commonParamsInterceptor = CommonParamsInterceptor();
@@ -48,19 +48,21 @@ class Network extends BaseNetwork {
   /// @param enableCookie true：启用cookie
   Network setEnableCookie(bool enableCookie) {
     if (enableCookie) {
-      _cookieJar = CookieJar();
-      dio.interceptors.add(CookieManager(_cookieJar));
+      _cookieJar = DefaultCookieJar(
+        ignoreExpires: true
+      );
+      dio.interceptors.add(CookieManager(_cookieJar!));
     }
     return this;
   }
 
   /// 获取cookie
   /// 未启用cookie return null
-  String get cookie {
+  Future<String?> cookie() async {
     if (_cookieJar != null) {
-      List<Cookie> cookies = _cookieJar.loadForRequest(Uri.parse(baseUrl));
+      List<Cookie>? cookies = await _cookieJar?.loadForRequest(Uri.parse(baseUrl));
       if (Util.isNotEmpty(cookies)) {
-        Cookie cookie = cookies[0];
+        Cookie? cookie = cookies?[0];
         String cookieJson = cookie.toString();
         return cookieJson;
       }

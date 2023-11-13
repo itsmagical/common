@@ -11,10 +11,10 @@ class StatusWidgetProvider {
     this.getErrorWidget
   });
 
-  WidgetProvider<Widget> getLoadingWidget;
+  WidgetProvider<Widget>? getLoadingWidget;
 
-  WidgetProvider<Widget> getEmptyWidget;
+  WidgetProvider<Widget>? getEmptyWidget;
 
-  WidgetProvider<Widget> getErrorWidget;
+  WidgetProvider<Widget>? getErrorWidget;
 
 }

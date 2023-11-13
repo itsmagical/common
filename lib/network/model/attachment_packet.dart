@@ -9,26 +9,27 @@ import 'package:common/network/model/attachment.dart';
 
 class AttachmentPacket {
   /// 附件包id
-  int attachmentPacketId;
+  int? attachmentPacketId;
   /// 附件包内附件id
-  List<int> attachIds;
+  List<int>? attachIds;
   /// 附件包内附件
-  List<Attachment> attachments;
+  List<Attachment>? attachments;
 
   AttachmentPacket({this.attachmentPacketId, this.attachIds, this.attachments});
 
   AttachmentPacket.fromJson(Map<String, dynamic> json) {
     attachmentPacketId = json['attachmentPacketId'];
-    if (json['attachIds'] != null) {
-      attachIds = new List<int>();
-      json['attachIds'].forEach((v) {
-        attachIds.add(v);
-      });
-    }
+    attachIds = json['attachIds'].cast<int>();
+    // if (json['attachIds'] != null) {
+    //   attachIds = new List<int>();
+    //   json['attachIds'].forEach((v) {
+    //     attachIds.add(v);
+    //   });
+    // }
     if (json['attachments'] != null) {
-      attachments = new List<Attachment>();
+      attachments = <Attachment>[];
       json['attachments'].forEach((v) {
-        attachments.add(new Attachment.fromJson(v));
+        attachments!.add(new Attachment.fromJson(v));
       });
     }
   }
@@ -38,10 +39,10 @@ class AttachmentPacket {
     data['attachmentPacketId'] = this.attachmentPacketId;
     data['attachIds'] = this.attachIds;
     if (this.attachIds != null) {
-      data['attachIds'] = this.attachIds.map((e) => e.toString()).toList();
+      data['attachIds'] = this.attachIds!.map((e) => e.toString()).toList();
     }
     if (this.attachments != null) {
-      data['attachments'] = this.attachments.map((v) => v.toJson()).toList();
+      data['attachments'] = this.attachments!.map((v) => v.toJson()).toList();
     }
     return data;
   }

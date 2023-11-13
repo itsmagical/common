@@ -4,45 +4,45 @@ import 'permission.dart';
 
 class UserModel {
   /// 用户id
-  int userId;
+  int? userId;
   /// 用户名
-  String userName;
+  String? userName;
 
   /// 登录名
-  String loginName;
+  String? loginName;
   /// 密码
-  String password;
+  String? password;
 
   /// 手机号
-  String mobile;
+  String? mobile;
   /// 头像地址
-  String photoPath;
+  String? photoPath;
   /// 性别
-  String gender;
+  String? gender;
   /// 邮箱
-  String postBox;
+  String? postBox;
 
   /// 角色
-  String userRole;
+  String? userRole;
   /// 岗位
-  String positions;
+  String? positions;
 
   /// 用户组织id
-  int userOrgId;
+  int? userOrgId;
   /// 部门id
-  int userOrgParId;
+  int? userOrgParId;
   /// 顶级组织id
-  int userOrgPerId;
+  int? userOrgPerId;
   /// 顶级组织描述
-  String userOrgParStr;
+  String? userOrgParStr;
 
   /// 监管类型
   /// 焚烧 1
   /// 飞灰 2
-  int superviseType;
+  int? superviseType;
 
   /// 权限
-  List<Permission> permInstanceDtos;
+  List<Permission>? permInstanceDtos;
 
   UserModel({
     this.userId,
@@ -80,9 +80,9 @@ class UserModel {
     userOrgParStr = json['userOrgParStr'];
     superviseType = json['superviseType'];
     if (json['permInstanceDtos'] != null) {
-      permInstanceDtos = new List<Permission>();
+      permInstanceDtos = <Permission>[];
       json['permInstanceDtos'].forEach((v) {
-        permInstanceDtos.add(new Permission.fromJson(v));
+        permInstanceDtos!.add(new Permission.fromJson(v));
       });
     }
   }
@@ -106,7 +106,7 @@ class UserModel {
     data['superviseType'] = this.superviseType;
     if (this.permInstanceDtos != null) {
       data['permInstanceDtos'] =
-          this.permInstanceDtos.map((v) => v.toJson()).toList();
+          this.permInstanceDtos!.map((v) => v.toJson()).toList();
     }
     return data;
   }

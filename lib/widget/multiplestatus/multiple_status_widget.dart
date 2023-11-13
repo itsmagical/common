@@ -16,17 +16,17 @@ import 'status_widget_provider.dart';
 class MultipleStatusWidget extends StatefulWidget {
 
   MultipleStatusWidget({
-    @required this.child,
+    required this.child,
     this.controller,
     this.retryingCallback,
     this.widgetProvider,
   });
 
   final Widget child;
-  final StatusController controller;
-  final VoidCallback retryingCallback;
+  final StatusController? controller;
+  final VoidCallback? retryingCallback;
 
-  final StatusWidgetProvider widgetProvider;
+  final StatusWidgetProvider? widgetProvider;
 
   @override
   State<StatefulWidget> createState() {
@@ -51,13 +51,13 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
     }
   }
 
-  Status status;
-  StatusWidgetHelper statusWidgetHelper;
+  Status? status;
+  StatusWidgetHelper? statusWidgetHelper;
 
   /// 重试回调
-  final VoidCallback retryingCallback;
+  final VoidCallback? retryingCallback;
 
-  StatusWidgetProvider widgetProvider;
+  StatusWidgetProvider? widgetProvider;
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _MultipleStatusWidgetState extends State<MultipleStatusWidget> {
             children: <Widget>[
               widget.child,
               if (status != null && status != Status.FINISH)
-                statusWidgetHelper.render(status)
+                statusWidgetHelper?.render(status!) ?? Container()
             ],
           );
         }
