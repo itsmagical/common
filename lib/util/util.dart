@@ -11,7 +11,7 @@ class Util {
   }
 
   /// @return true object is null
-  static bool isNull(Object value) {
+  static bool isNull(Object? value) {
     return null == value;
   }
 
@@ -20,11 +20,15 @@ class Util {
       return true;
     }
     if (value is String) {
-      return value == null || value.isEmpty;
+      return value.isEmpty;
     }
     if (value is Iterable) {
-      return null == value || value.length == 0;
+      return value.length == 0;
     }
+    if (value is Map) {
+      return value.isEmpty;
+    }
+    return true;
   }
 
   /// @return true 字符串不为空
