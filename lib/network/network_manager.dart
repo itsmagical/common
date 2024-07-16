@@ -117,4 +117,13 @@ class NetworkManager {
     }
     return _mainNetwork!;
   }
+
+  /// 判断urlTag是否已创建
+  bool isTagCreated({String? tag}) {
+    if (Util.isNotEmptyText(tag)) {
+      return _baseUrlTagMap.containsKey(tag);
+    }
+    return false;
+  }
+
 }

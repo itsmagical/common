@@ -56,6 +56,11 @@ class Network extends BaseNetwork {
     return this;
   }
 
+  /// 获取cookieJar
+  CookieJar? getCookieJar() {
+    return _cookieJar;
+  }
+
   /// 获取cookie
   /// 未启用cookie return null
   Future<String?> cookie() async {
