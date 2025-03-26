@@ -63,7 +63,8 @@ class _LoadingStatusWidgetState extends State<LoadingStatusWidget> {
                 color: Colors.black54,
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             child: const CircularProgressIndicator(
-              backgroundColor: Colors.white,
+              // backgroundColor: Colors.white,
+              color: Colors.white
             ),
           ),
         );

@@ -13,6 +13,7 @@ class LoadingUtil {
     Color backgroundColor = Colors.black54, // 背景颜色
     double size = 50.0, // 加载框大小
     double borderRadius = 10.0, // 圆角
+    bool crossPage = false
   }) {
     if (_isShowing) return; // 防止重复显示
     _isShowing = true;
@@ -20,16 +21,15 @@ class LoadingUtil {
     _loading = BotToast.showCustomLoading(
       toastBuilder: (cancelFunc) {
         return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-          child: SizedBox(
-            width: size,
-            height: size,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
+          alignment: Alignment.center,
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: const CircularProgressIndicator(
+              // backgroundColor: Colors.white,
+                color: Colors.white
             ),
           ),
         );
