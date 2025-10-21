@@ -42,7 +42,9 @@ class ItemLabelHelper {
       positionOptionedIndex = optionedIndex;
 
       optionedIndexes.clear();
-      optionedIndexes.add(optionedIndex!);
+      if (optionedIndex != null) {
+        optionedIndexes.add(optionedIndex!);
+      }
       _setOptioned();
     }
   }
