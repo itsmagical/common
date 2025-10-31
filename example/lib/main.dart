@@ -7,7 +7,6 @@ import 'package:common/widget/expansion_label_option/expansion_label_option.dart
 import 'package:common/widget/expansion_label_option/item_entity.dart';
 import 'package:common/widget/expansion_label_option/label_theme.dart';
 import 'package:common/widget/expansion_label_option/option_controller.dart';
-import 'package:example/status_demo.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -110,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: [
           IconButton(icon: Icon(Icons.add), onPressed: () {
-            NavigatorUtil.push(context, StatusDemo());
+
           })
         ],
       ),
@@ -139,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              // style: Theme.of(context).textTheme.headline4,
             ),
             Container(
 

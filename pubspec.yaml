@@ -1,6 +1,6 @@
 name: common
 description: 基本组件.
-version: 0.0.1
+version: 3.35.5
 #author: xy
 homepage: https://flutter.dev/
 publish_to: http://192.168.20.141:8080
@@ -13,16 +13,16 @@ dependencies:
     sdk: flutter
 
   # http 请求库
-  dio: ^5.3.3
+  dio: ^5.9.0
   # cookie
   cookie_jar: ^4.0.8
-  dio_cookie_manager: ^3.1.0+1
+  dio_cookie_manager: 3.3.0
   # 格式化时间
-  date_format: ^2.0.7
+  date_format: ^2.0.9
   # 本地存储
-  shared_preferences: 2.2.2
+  shared_preferences: 2.5.3
   # 动态权限
-  permission_handler: 11.0.1
+  permission_handler: ^12.0.1
   # RSA加密
   encrypt: 5.0.3
 

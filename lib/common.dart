@@ -11,7 +11,6 @@ export 'package:flutter_echarts/flutter_echarts.dart';
 
 /// 基本组件
 /// 基本业务组件或业务组件都需要依赖此组件
-/// @author LiuHe
 /// @created at 2021/1/19 14:22
 
 class Common {
