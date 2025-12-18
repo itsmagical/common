@@ -10,7 +10,6 @@ import 'package:common/util/util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-
 ///
 /// 常用请求接口(新版本接口)
 /// 某些常用功能接口会分为老版本接口和新版本接口，使用时需主观区分
@@ -20,7 +19,6 @@ import 'package:flutter/material.dart';
 /// @created at 2021/9/10 10:30
 
 class NewCommonDao extends BaseDao {
-
   NewCommonDao._();
 
   static NewCommonDao instance = NewCommonDao._();
@@ -36,7 +34,8 @@ class NewCommonDao extends BaseDao {
     Map<String, dynamic> params = {
       'type': type,
     };
-    MResponse response = await network.post(path, data: params, options: options);
+    MResponse response =
+        await network.post(path, data: params, options: options);
 
     if (response.success ?? false) {
       var data = response.data;
@@ -45,7 +44,7 @@ class NewCommonDao extends BaseDao {
         data.forEach((element) {
           dictionaries.add(Dictionary.fromJson(element));
         });
-        response.data =  dictionaries;
+        response.data = dictionaries;
       }
     }
 
@@ -59,11 +58,10 @@ class NewCommonDao extends BaseDao {
     required Network network,
   }) async {
     String path = 'attachMgmt/listAttachments.do';
-    Map<String, dynamic> params = {
-      'attachmentPacketId': attachmentPacketId
-    };
+    Map<String, dynamic> params = {'attachmentPacketId': attachmentPacketId};
 
-    MResponse response = await network.post(path, data: params,
+    MResponse response = await network.post(path,
+        data: params,
         options: Options(contentType: Headers.formUrlEncodedContentType));
 
     if (response.success ?? false) {
@@ -96,7 +94,7 @@ class NewCommonDao extends BaseDao {
     for (int i = 0; i < files.length; i++) {
       String imagePath = files[i].path;
       String name =
-      imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
+          imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
       var t = await MultipartFile.fromFile(imagePath, filename: name);
       var file = MapEntry('multiFile', t);
       formData.files.add(file);
@@ -119,53 +117,100 @@ class NewCommonDao extends BaseDao {
     return response;
   }
 
+  /// 本方法暂时只是上传图片文件
+  Future<MResponse> upLoadFiles_new(
+      {required Network network,
+      required File file,
+      required String moduleType,
+      required int? attachmentPacketId}) async {
+    var formData = FormData();
+
+    String imagePath = file.path;
+    String name =
+        imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
+    var t = MultipartFile.fromFileSync(imagePath, filename: name);
+    var localfile = MapEntry('multiFile', t);
+    formData.files.add(localfile);
+    String type = name.substring(name.lastIndexOf(".") + 1, name.length);
+    String stringType = "";
+
+    if (type == "jpg" || type == "jpeg" || type == 'png') {
+      stringType = "image/$type";
+    } else if (type == "mp4") {
+      stringType = "video/$type";
+    } else if (type == "wav") {
+      stringType = "voice/$type";
+    }
+    formData.fields
+      ..add(MapEntry("attachType", "1"))
+      ..add(MapEntry("attachmentPacketId", '$attachmentPacketId' ?? '-1'))
+      ..add(MapEntry("moduleType", moduleType ?? ''))
+      ..add(MapEntry("name", name ?? ''));
+
+    MResponse response;
+    try {
+      response = await network.post(
+        'systemcore/attachMgmt/multipleFileUpload.do',
+        data: formData,
+      );
+
+      if (response.success ?? false) {
+        var data = response.data;
+        if (data != null) {
+          /// 多文件上传成功后，后台只返回一个附件的信息，而不是上传的附件集合
+          /// 无法转换为AttachmentPacket
+          response.data = Attachment.fromJson(data);
+//        response.data = AttachmentPacket.fromJson(data);
+        }
+      }
+      return response;
+    } on DioException catch (e) {
+      print('post请求发生错误：$e');
+      String msg = "请求异常";
+      return MResponse(data: null, success: false, message: msg, total: 0);
+    }
+  }
+
   /// 删除附件包内的所有附件
   /// @param attachmentId附件id
   /// @param network 执行本次上传的network，null则使用默认Network
-  Future<MResponse> deleteAttachments({
-    required int attachmentPacketId,
-    required Network network,
-    Options? options
-  }) async {
+  Future<MResponse> deleteAttachments(
+      {required int attachmentPacketId,
+      required Network network,
+      Options? options}) async {
     String path = 'attachMgmt/deleteAttachments.do';
-    Map<String, dynamic> params = {
-      'attachmentPacketId': attachmentPacketId
-    };
+    Map<String, dynamic> params = {'attachmentPacketId': attachmentPacketId};
 
-    MResponse response = await network.post(path, data: params, options: options);
+    MResponse response =
+        await network.post(path, data: params, options: options);
     return response;
   }
 
   /// 删除附件
   /// @param dataIds 附件id
   /// @param network 执行本次上传的network，null则使用默认Network
-  Future<MResponse> deleteAttachment({
-    required String dataIds,
-    required Network network,
-    Options? options
-  }) async {
+  Future<MResponse> deleteAttachment(
+      {required String dataIds,
+      required Network network,
+      Options? options}) async {
     String path = 'attachMgmt/deleteOnlyAttach.do';
-    Map<String, dynamic> params = {
-      'dataIds': dataIds
-    };
+    Map<String, dynamic> params = {'dataIds': dataIds};
 
-    MResponse response = await network.post(path, data: params, options: options);
+    MResponse response =
+        await network.post(path, data: params, options: options);
     return response;
   }
 
   /// 拷贝附件
-  Future<MResponse> copyAttachment({
-    required String packetIdStr,
-    required Network network,
-    Options? options
-  }) async {
+  Future<MResponse> copyAttachment(
+      {required String packetIdStr,
+      required Network network,
+      Options? options}) async {
     String path = 'attachMgmt/copyAttach.do';
-    Map<String, dynamic> params = {
-      'packetIdStr': packetIdStr
-    };
+    Map<String, dynamic> params = {'packetIdStr': packetIdStr};
 
-    MResponse response = await network.post(path, data: params, options: options);
+    MResponse response =
+        await network.post(path, data: params, options: options);
     return response;
   }
-
 }
