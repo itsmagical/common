@@ -18,6 +18,8 @@ class NetWorError {
         return '响应状态码错误';
       case DioExceptionType.sendTimeout:
         return 'url发送超时';
+      case DioExceptionType.transformTimeout:
+        return '数据转换超时, 请稍后再试';
       case DioExceptionType.cancel:
         return '请求已取消';
       case DioExceptionType.unknown:

@@ -6,7 +6,7 @@ homepage: https://flutter.dev/
 publish_to: http://192.168.20.141:8080
 
 environment:
-  sdk: ">=2.12.0 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
 dependencies:
   flutter:
